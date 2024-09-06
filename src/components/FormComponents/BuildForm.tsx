@@ -2,7 +2,11 @@ import { FormBuilder, FormType } from "@formio/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
 import { formOptions } from "../../utils/utils";
-import { addLoadSchema, setSchema } from "../../redux/builder";
+import {
+    addLoadSchema,
+    setCurNameSchema,
+    setSchema,
+} from "../../redux/builder";
 import { translations } from "../../utils/constans";
 import { Button, Form } from "react-bootstrap";
 import { saveAs } from "file-saver";
@@ -39,6 +43,8 @@ export default function BuildForm() {
         if (nameForm.trim()) {
             const newForm = { name: nameForm, schema: localSchema };
             dispatch(addLoadSchema(newForm));
+            dispatch(setCurNameSchema(""));
+            setNameForm("");
             alert("Форма добавлена в список сохраненных!");
         } else {
             alert("Введите имя формы перед сохранением.");
@@ -48,13 +54,30 @@ export default function BuildForm() {
         schemaRef.current = globalSchema;
         setNameForm(nameSchema);
     }, [nameSchema]);
-
     const downloadFormSchema = () => {
         const blob = new Blob([JSON.stringify(localSchema, null, 2)], {
             type: "application/json",
         });
         saveAs(blob, nameForm ? nameForm : "FormJson");
         alert("Форма сохранена!");
+    };
+    const resetFormSchema = () => {
+        dispatch(setCurNameSchema(""));
+        dispatch(
+            setSchema({
+                display: "form",
+                components: [],
+            }),
+        );
+        setLocalSchema({
+            display: "form",
+            components: [],
+        });
+        setNameForm("");
+        schemaRef.current = {
+            display: "form",
+            components: [],
+        };
     };
 
     return (
@@ -78,14 +101,19 @@ export default function BuildForm() {
                         >
                             Сохранить форму
                         </Button>
-                        <div className="flex justify-between items-center">
-                            <Button
-                                className="h-10 bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
-                                onClick={downloadFormSchema}
-                            >
-                                Скачать форму
-                            </Button>
-                        </div>
+
+                        <Button
+                            className="h-10 bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+                            onClick={downloadFormSchema}
+                        >
+                            Скачать форму
+                        </Button>
+                        <Button
+                            className="h-10 bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+                            onClick={resetFormSchema}
+                        >
+                            Очистить поле
+                        </Button>
                     </div>
                 </form>
                 <div className="bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm min-h-[700px] ">

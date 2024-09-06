@@ -68,7 +68,7 @@ export const translations = {
         "Apply Mask On": "Использовать Маску для",
         "Allow Multiple Masks": "Разрешить использование нескольких масок",
         "Tab Index": "Индекс табуляции",
-        "Sets the tabindex attribute of this component to override the tab order of the form. See the MSDN documentation on tabindex for more information.":
+        "Sets the tabindex attribute of this component to override the tab order of the form. See the MDN documentation on tabindex for more information.":
             "Устанавливает атрибут tabindex этого компонента для переопределения порядка табуляции в форме.",
         "Indicates whether input elements can by default have their values automatically completed by the browser. See the MDN documentation on autocomplete for more information.":
             "Указывает, могут ли значения элементов ввода по умолчанию автоматически заполняться браузером. ",
@@ -76,6 +76,40 @@ export const translations = {
         "Select Boxes": "Выбор элемента",
         Select: "Поле с выбором",
         Container: "Контейнер",
+        Tooltip: "Подсказка",
+        "Input Field": "Поле ввода",
+        "Calendar picker": "Средство выбора календаря",
+        Change: "Изменение",
+        Blur: "размытие ",
+        "Select the type of applying mask.": "Выберите тип применяемой маски.",
+        Data: "Данные",
+        "Default Value": "Значение по умолчанию",
+        "Multiple Values": "Несколько значений",
+        "Position for the label for this field.": "Позиция названия поля",
+        "Left (Left-aligned)": "Слева (по левому краю)",
+        "Left (Right-aligned)": "Слева (по правому краю)",
+        "Right (Left-aligned)": "Справа (по левому краю)",
+        "Right (Right-aligned)": "Справа (по правому краю)",
+        "Custom CSS class to add to this component.":
+            "Кастомный CSS-класс для добавления к этому компоненту",
+        Help: "Помощь",
+        "A hidden field is still a part of the form, but is hidden from view.":
+            "Скрытое поле по-прежнему является частью формы, но скрыто от глаз.",
+        "Hide the label (title, if no label) of this component. This allows you to show the label in the form builder, but not when it is rendered.":
+            "Скрыть название (заголовок, если его нет) этого компонента. Это позволяет отображать метку в конструкторе форм, но не при ее визуализации.",
+        "Show a live count of the number of words.":
+            "Показать количество слов в реальном времени.",
+        "Show a live count of the number of characters.":
+            "Показывайте количество символов в реальном времени.",
+        "Hide the input in the browser. This does not encrypt on the server. Do not use for passwords.":
+            "Скройте вводимые данные в браузере. Это не приводит к шифрованию на сервере. Не используйте для паролей.",
+        "Make this field the initially focused element on this form.":
+            "Сделайте это поле изначально сфокусированным элементом",
+        "Disable the form input.": "Отключите ввод в форму.",
+        "Shows this value within the table view of the submissions.":
+            "Показывать это значение в табличном представлении отправленных данных.",
+        "Opens up a modal to edit the value of this component.":
+            "Открывает режим модального окна для редактирования значения этого компонента.",
     },
     en: {
         Submit: "Submit",
