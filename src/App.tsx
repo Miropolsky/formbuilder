@@ -1,10 +1,10 @@
 import "./index.css";
-import Components from "./components/Components";
+import BuilderPage from "./pages/BuilderPage";
 
 function App() {
     return (
         <div className="App">
-            <Components />
+            <BuilderPage />
         </div>
     );
 }
