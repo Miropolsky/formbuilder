@@ -1,6 +1,12 @@
 export const translations = {
     ru: {
+        "Basic Elements": "Базовые элементы",
+        Select: "Поле с выбором",
+        Button: "Кнопка",
+        Checkbox: "Чекбокс",
+        "Text Area": "Текст",
         Submit: "Отправить",
+        "Text Field": "Текстовое поле",
         Cancel: "Отмена",
         Save: "Сохранить",
         Remove: "Удалить",
@@ -74,7 +80,6 @@ export const translations = {
             "Указывает, могут ли значения элементов ввода по умолчанию автоматически заполняться браузером. ",
         Radio: "Компонент Радио",
         "Select Boxes": "Выбор элемента",
-        Select: "Поле с выбором",
         Container: "Контейнер",
         Tooltip: "Подсказка",
         "Input Field": "Поле ввода",
@@ -112,6 +117,12 @@ export const translations = {
             "Открывает режим модального окна для редактирования значения этого компонента.",
     },
     en: {
+        Button: "Button",
+        Checkbox: "Checkbox",
+        Select: "Select",
+        "Text Area": "Text Area",
+        "Text Field": "Text Field",
+        "Basic Elements": "Basic Elements",
         Submit: "Submit",
         Cancel: "Cancel",
         Save: "Save",
@@ -135,4 +146,4 @@ export const translations = {
         "Hide preview": "Hide preview",
         "Show preview": "Show preview",
     },
-};
+} as const;

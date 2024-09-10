@@ -42,8 +42,8 @@ export default function LoadedForm() {
         alert("Форма удалена из списка.");
     };
 
-    const handleLoadSelectedForm = () => {
-        const form = savedForms.find((form) => form.name === selectedForm);
+    const handleLoadSelectedForm = (name: string) => {
+        const form = savedForms.find((form) => form.name === name);
         if (form) {
             dispatch(setSchema(form.schema));
             dispatch(setCurNameSchema(form.name));
@@ -51,6 +51,10 @@ export default function LoadedForm() {
         } else {
             alert("Форма не найдена.");
         }
+    };
+    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedForm(e.target.value);
+        handleLoadSelectedForm(e.target.value);
     };
     return (
         <>
@@ -74,23 +78,25 @@ export default function LoadedForm() {
                         <Form.Select
                             aria-label="Выберите сохраненную форму"
                             value={selectedForm}
-                            onChange={(e) => setSelectedForm(e.target.value)}
+                            onChange={(e) => onChangeSelect(e)}
                             className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                         >
                             <option value="">Выберите форму</option>
                             {savedForms.map((form) => (
-                                <option key={form.name} value={form.name}>
-                                    {form.name}
-                                </option>
+                                <>
+                                    <option key={form.name} value={form.name}>
+                                        {form.name}
+                                    </option>
+                                </>
                             ))}
                         </Form.Select>
                         <div className="flex gap-4 mt-4">
-                            <Button
+                            {/* <Button
                                 className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                                 onClick={handleLoadSelectedForm}
                             >
                                 Загрузить
-                            </Button>
+                            </Button> */}
                             <Button
                                 className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                                 onClick={handleDeleteForm}

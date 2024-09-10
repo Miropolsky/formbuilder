@@ -1,13 +1,14 @@
 import { FormType } from "@formio/react";
+import { translations } from "./constans";
 
-const languages = ["en", "ru", "fr"] as const;
+const languages = ["en", "ru"] as const;
 
 export type LanguagesType = (typeof languages)[number];
 export function isLanguage(language: string): language is LanguagesType {
     return languages.includes(language as LanguagesType);
 }
 
-export function formOptions(lang: string) {
+export function formOptions(lang: LanguagesType) {
     return {
         language: lang,
         noNewEdit: true,
@@ -290,27 +291,28 @@ export function formOptions(lang: string) {
 
         builder: {
             basic: {
-                title: lang === "ru" ? "Базовые элементы" : "Basic Elements",
+                title: translations[lang]["Basic Elements"] || "Basic Elements",
                 default: false,
                 components: {
                     textfield: {
-                        title: lang === "ru" ? "Текстовое поле" : "Text Field",
+                        title: translations[lang]["Text Field"] || "Text Field",
                         key: "textfield",
                         icon: "terminal",
                         schema: {
                             label:
-                                lang === "ru" ? "Текстовое поле" : "Text Field",
+                                translations[lang]["Text Field"] ||
+                                "Text Field",
                             type: "textfield",
                             key: "textfield",
                             input: true,
                         },
                     },
                     select: {
-                        title: lang === "ru" ? "Поле с выбором" : "Select",
+                        title: translations[lang]["Select"] || "Select",
                         key: "select",
                         icon: "th-list",
                         schema: {
-                            label: lang === "ru" ? "Поле с выбором" : "Select",
+                            label: translations[lang]["Select"] || "Select",
                             type: "select",
                             key: "select",
                             input: true,
@@ -318,28 +320,29 @@ export function formOptions(lang: string) {
                     },
 
                     textarea: {
-                        title: lang === "ru" ? "Текст" : "Text Area",
+                        title: translations[lang]["Text Area"] || "Text Area",
                         icon: "terminal",
                         schema: {
-                            label: lang === "ru" ? "Текст" : "Text Area",
+                            label:
+                                translations[lang]["Text Area"] || "Text Area",
                             type: "textArea",
                             key: "textArea",
                         },
                     },
                     checkbox: {
-                        title: lang === "ru" ? "Чекбокс" : "Checkbox",
+                        title: translations[lang]["Checkbox"] || "Checkbox",
                         icon: "check-square",
                         schema: {
-                            label: lang === "ru" ? "Чекбокс" : "Checkbox",
+                            label: translations[lang]["Checkbox"] || "Checkbox",
                             type: "checkbox",
                             key: "checkbox",
                         },
                     },
                     button: {
-                        title: lang === "ru" ? "Кнопка" : "Button",
+                        title: translations[lang]["Button"] || "Button",
                         icon: "stop",
                         schema: {
-                            label: lang === "ru" ? "Кнопка" : "Button",
+                            label: translations[lang]["Button"] || "Button",
                             type: "button",
                             key: "button",
                         },

@@ -15,6 +15,7 @@ export default function BuildForm() {
     const language = useStoreSelector((state) => state.builder.language);
     const nameSchema = useStoreSelector((state) => state.builder.curNameSchema);
     const globalSchema = useStoreSelector((state) => state.builder.schema);
+    const savedForms = useStoreSelector((state) => state.builder.loadSchems);
     const [nameForm, setNameForm] = useState("");
     const [localSchema, setLocalSchema] = useState<FormType>({
         display: "form",
@@ -36,18 +37,19 @@ export default function BuildForm() {
         [language],
     );
     const handleSaveForm = () => {
-        if (!nameForm) {
-            alert("Введите имя формы");
+        if (localSchema.components.length === 0) {
+            alert("Невозможно сохранить пустую форму");
             return;
         }
-        if (nameForm.trim()) {
+        let nameForm = prompt("Введите название формы");
+        if (nameForm && nameForm.trim()) {
             const newForm = { name: nameForm, schema: localSchema };
             dispatch(addLoadSchema(newForm));
             dispatch(setCurNameSchema(""));
             setNameForm("");
             alert("Форма добавлена в список сохраненных!");
         } else {
-            alert("Введите имя формы перед сохранением.");
+            alert("Некорректное имя формы");
         }
     };
     useEffect(() => {
@@ -55,11 +57,20 @@ export default function BuildForm() {
         setNameForm(nameSchema);
     }, [nameSchema]);
     const downloadFormSchema = () => {
-        const blob = new Blob([JSON.stringify(localSchema, null, 2)], {
-            type: "application/json",
-        });
-        saveAs(blob, nameForm ? nameForm : "FormJson");
-        alert("Форма сохранена!");
+        if (localSchema.components.length === 0) {
+            alert("Невозможно сохранить пустую форму");
+            return;
+        }
+        let nameForm = prompt("Введите название формы");
+        if (nameForm && nameForm.trim()) {
+            const blob = new Blob([JSON.stringify(localSchema, null, 2)], {
+                type: "application/json",
+            });
+            saveAs(blob, nameForm);
+            alert("Форма сохранена!");
+        } else {
+            alert("Некорректное имя формы");
+        }
     };
     const resetFormSchema = () => {
         dispatch(setCurNameSchema(""));
@@ -80,39 +91,105 @@ export default function BuildForm() {
         };
     };
 
+    const loadFormSchema = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target?.files?.[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const result = e.target?.result;
+            if (typeof result === "string") {
+                try {
+                    const loadedSchema = JSON.parse(result);
+                    dispatch(setSchema(loadedSchema));
+                    dispatch(setCurNameSchema(file.name.slice(0, -5)));
+                    alert("Форма загружена!");
+                } catch (error) {
+                    alert("Ошибка при загрузке формы");
+                }
+            } else {
+                alert("Ошибка! Некорректные данные");
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const handleLoadSelectedForm = (name: string) => {
+        const form = savedForms.find((form) => form.name === name);
+        if (form) {
+            schemaRef.current = form.schema;
+            dispatch(setSchema(form.schema));
+            dispatch(setCurNameSchema(form.name));
+            alert("Форма загружена!");
+        } else {
+            alert("Форма не найдена.");
+        }
+    };
+    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setNameForm(e.target.value);
+        handleLoadSelectedForm(e.target.value);
+    };
+
     return (
         <>
             <div className="bg-white p-6 rounded-lg shadow-lg mt-8 space-y-8">
                 <form className="flex flex-col ">
-                    <div className="flex gap-x-4 items-end">
-                        <div className="flex flex-col items-start">
-                            <label className="text-lg font-semibold text-gray-700">
-                                Имя формы
+                    <div className="flex gap-x-4 items-center">
+                        <div>
+                            <label className="text-lg font-semibold mb-2 block">
+                                Выберите сохраненную форму
                             </label>
-                            <Form.Control
-                                className="w-[400px] mt-2 p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                            <Form.Select
+                                aria-label="Выберите сохраненную форму"
                                 value={nameForm}
-                                onChange={(e) => setNameForm(e.target.value)}
+                                onChange={(e) => onChangeSelect(e)}
+                                className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            >
+                                <option value="">Выберите форму</option>
+                                {savedForms.map((form) => (
+                                    <>
+                                        <option
+                                            key={form.name}
+                                            value={form.name}
+                                        >
+                                            {form.name}
+                                        </option>
+                                    </>
+                                ))}
+                            </Form.Select>
+                        </div>
+                        <div>
+                            <div className="text-xl font-semibold mb-2 text-gray-700">
+                                Загрузить форму с компьютера
+                            </div>
+                            <input
+                                type="file"
+                                accept="application/json"
+                                onChange={loadFormSchema}
+                                className="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                             />
                         </div>
+                    </div>
+                    <div className="flex gap-x-4 items-end mt-3">
                         <Button
                             className="mt-2 h-10 bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
                             onClick={handleSaveForm}
                         >
-                            Сохранить форму
+                            Сохранить форму в список
                         </Button>
 
                         <Button
-                            className="h-10 bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+                            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300"
                             onClick={downloadFormSchema}
                         >
                             Скачать форму
                         </Button>
                         <Button
-                            className="h-10 bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-300"
                             onClick={resetFormSchema}
                         >
-                            Очистить поле
+                            Очистить форму
                         </Button>
                     </div>
                 </form>
