@@ -305,6 +305,18 @@ export function formOptions(lang: string) {
                             input: true,
                         },
                     },
+                    select: {
+                        title: lang === "ru" ? "Поле с выбором" : "Select",
+                        key: "select",
+                        icon: "th-list",
+                        schema: {
+                            label: lang === "ru" ? "Поле с выбором" : "Select",
+                            type: "select",
+                            key: "select",
+                            input: true,
+                        },
+                    },
+
                     textarea: {
                         title: lang === "ru" ? "Текст" : "Text Area",
                         icon: "terminal",
