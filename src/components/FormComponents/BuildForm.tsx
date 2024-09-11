@@ -4,6 +4,7 @@ import { useStoreDispatch, useStoreSelector } from "../../redux/store";
 import { formOptions } from "../../utils/utils";
 import {
     addLoadSchema,
+    editLoadSchema,
     setCurNameSchema,
     setSchema,
 } from "../../redux/builder";
@@ -42,7 +43,12 @@ export default function BuildForm() {
             return;
         }
         let nameForm = prompt("Введите название формы");
-        if (nameForm && nameForm.trim()) {
+        if (
+            savedForms.find((el) => el.name === nameForm) !== undefined &&
+            nameForm
+        ) {
+            handleEditLoadSchema(nameForm);
+        } else if (nameForm && nameForm.trim()) {
             const newForm = { name: nameForm, schema: localSchema };
             dispatch(addLoadSchema(newForm));
             dispatch(setCurNameSchema(""));
@@ -126,6 +132,12 @@ export default function BuildForm() {
             alert("Форма не найдена.");
         }
     };
+
+    const handleEditLoadSchema = (name: string) => {
+        dispatch(editLoadSchema({ schema: localSchema, name }));
+        alert("Форма перезаписана");
+    };
+
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setNameForm(e.target.value);
         handleLoadSelectedForm(e.target.value);

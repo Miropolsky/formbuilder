@@ -12,6 +12,7 @@ export const translations = {
         Remove: "Удалить",
         invalid_email: "Некорректный email",
         required: "Это поле обязательно для заполнения",
+        Required: "Обязательно для заполнения",
         Display: "Дисплей",
         Action: "Действие",
         Theme: "Тема",
@@ -25,14 +26,25 @@ export const translations = {
         Bottom: "Снизу",
         Left: "Слева",
         Right: "Справа",
+        "Item Template": "Шаблон элемента",
+        "Input Type": "Тип поля",
+        "Widget Type": "Тип виджета",
+        "Storage Type": "Тип хранилища",
+        "Data Source Type": "Тип источника данных",
         Validation: "Валидация",
+        "Left Icon": "Иконка слева",
+        "Right Icon": "Иконка справа",
         "Hide preview": "Скрыть предпросмотр",
         "Show preview": "Показать предпросмотр",
         Content: "Content",
         Columns: "Колонки",
         "Field Set": "Набор полей",
+        "Data Source Values": "Значения источника данных",
+        Value: "Значение",
         Panel: "Панель",
+        "Widget Settings": "Настройки виджета",
         Table: "Таблица",
+        Rows: "Строки",
         Tabs: "Вкладки",
         Well: "Карточка",
         "HTML Element": "HTML Element",
@@ -41,12 +53,22 @@ export const translations = {
         "Date / Time": "Дата / Вреия",
         Day: "День",
         Survey: "Опрос",
+        Format: "Формат",
+        "Number of Rows": "Количество строк",
+        "Number of Columns": "Количество колонок",
         "Drag and Drop a form component": "Перетащите сюда элемент формы",
         Placeholder: "Подсказка",
         Prefix: "Префикс",
+        Title: "Заголовок",
+        Legend: "Легенда",
+        "Auto adjust columns": "Автоматическая настройка столбцов",
+        "Refresh On Change": "Обновить при изменении",
+        "Allow Manual Input": "Разрешить ручной ввод",
         "Custom CSS Class": "Кастомные CSS классы",
         Autocomplete: "Автозаполнение",
         Hidden: "Скрыть",
+        "Vertical Layout": "Вертикальная компоновка",
+        "Max Tags": "Максимальное количество тегов",
         "Hide Label": "Скрыть название",
         "Show Word Counter": "Показать счетчик слов",
         "Show Character Counter": "Показать счетчик символов",
@@ -54,6 +76,7 @@ export const translations = {
         "Initial Focus": "Первоначальный фокус",
         "Allow Spellcheck": "Разрешить проверку орфографии",
         Disabled: "Отключить",
+        "Allow only available values": "Разрешать только доступные значения",
         "The label for this field that will appear next to it.":
             "Название поля, которая появится рядом с ним",
         "Position for the label for this field":
@@ -79,8 +102,13 @@ export const translations = {
         "Indicates whether input elements can by default have their values automatically completed by the browser. See the MDN documentation on autocomplete for more information.":
             "Указывает, могут ли значения элементов ввода по умолчанию автоматически заполняться браузером. ",
         Radio: "Компонент Радио",
+        Width: "Ширина",
+        "Will automatically adjust columns based on if nested components are hidden.":
+            "Автоматически скорректирует столбцы в зависимости от того, скрыты ли вложенные компоненты.",
         "Select Boxes": "Выбор элемента",
         Container: "Контейнер",
+        Striped: "В полоску",
+        Hover: "При наведение",
         Tooltip: "Подсказка",
         "Input Field": "Поле ввода",
         "Calendar picker": "Средство выбора календаря",
@@ -98,6 +126,68 @@ export const translations = {
         "Custom CSS class to add to this component.":
             "Кастомный CSS-класс для добавления к этому компоненту",
         Help: "Помощь",
+        "A required field must be filled in before the form can be submitted.":
+            "Перед отправкой формы необходимо заполнить обязательное поле.",
+        Unique: "Уникальные данные",
+        "Makes sure the data submitted for this field is unique, and has not been submitted before.":
+            "Проверяет, являются ли данные, представленные для этого поля, уникальными и не отправлялись ранее.",
+        "Validate When Hidden": "Проверять, когда скрыт",
+        "Validates the component when it is hidden/conditionally hidden. Vaildation errors are displayed in the error alert on the form submission.":
+            "Проверяет компонент, когда он скрыт/условно скрыт. Ошибки проверки отображаются в предупреждении об ошибке при отправке формы.",
+        "Determines when this component should trigger front-end validation.":
+            "Определяет, когда этот компонент должен инициировать проверку интерфейса.",
+        "Validate On": "Проверять на",
+        "Maximum Length": "Максимальная длина",
+        "The maximum length requirement this field must meet.":
+            "Максимальное длина, которому должно соответствовать это поле.",
+        "Minimum Word Length": "Минимальное количество слов",
+        "The minimum amount of words that can be added to this field.":
+            "Минимальное количество слов, которые могут быть добавлены в это поле.",
+        "Maximum Word Length": "Максимальное количество слов",
+        "The maximum amount of words that can be added to this field.":
+            "Максимальное количество слов, которое может быть добавлено в это поле.",
+        "Regular Expression Pattern": "Шаблон регулярного выражения",
+        "The regular expression pattern test that the field value must pass before the form can be submitted.":
+            "Шаблон регулярного выражения проверяет, что значение поля должно пройти проверку перед отправкой формы.",
+        "Custom Error Message": "Пользовательское сообщение об ошибке",
+        "Error message displayed if any error occurred.":
+            "При возникновении какой-либо ошибки выводится сообщение об ошибке.",
+        "Input Format": "Формат ввода",
+        Bordered: "Граница",
+        Condensed: "Сжатый",
+        Type: "Тип",
+        "HTML Attributes": "HTML Атрибуты",
+        "This will stripe the table if checked.":
+            "Если этот флажок установлен, таблица будет разделена полосой.",
+        "This will border the table if checked.":
+            "Если этот флажок установлен, он будет ограничивать таблицу.",
+        "Highlight a row on hover.":
+            "Выделите строку при наведении курсора мыши.",
+        "Condense the size of the table.": "Уменьшите размер таблицы.",
+        "Cell Alignment": "Выравнивание ячеек",
+        "Horizontal alignment for cells of the table.":
+            "Выравнивание ячеек таблицы по горизонтали.",
+        "Clone Row Components": "Клонировать компоненты строк",
+        "Check this if you would like to 'clone' the first row of components to all additional empty rows of the table.": `Установите этот флажок, если вы хотите "клонировать" первую строку компонентов во все дополнительные пустые строки таблицы.`,
+        "Enter the number or columns that should be displayed by this table.":
+            "Введите количество столбцов, которые должны отображаться в этой таблице.",
+        "Enter the number or rows that should be displayed by this table.":
+            "Введите количество строк, которые должны отображаться в этой таблице.",
+        "The label for this field.": "Названия поля.",
+        "Text Case": "Текстовый регистр",
+        "When data is entered, you can change the case of the value.":
+            "Когда данные будут введены, будет изменяться регистр значений.",
+        "Mixed (Allow upper and lower case)":
+            "Смешанный (допускается использование верхнего и нижнего регистра)",
+        Uppercase: "Верхний регистр",
+        Lowercase: "Нижний регистр",
+        "Truncate Multiple Spaces": "Удаление нескольких пробелов",
+        "Redraw On": "Перерисовать при",
+        "Any change": "Какие-либо изменения",
+        "Minimum Length": "Минимальная длина",
+        "The minimum length requirement this field must meet.":
+            "Минимальное требование к длине, которому должно соответствовать это поле.",
+        Conditional: "Условие",
         "A hidden field is still a part of the form, but is hidden from view.":
             "Скрытое поле по-прежнему является частью формы, но скрыто от глаз.",
         "Hide the label (title, if no label) of this component. This allows you to show the label in the form builder, but not when it is rendered.":

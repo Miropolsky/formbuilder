@@ -43,6 +43,16 @@ const builderSlice = createSlice({
         addLoadSchema: (state, action: PayloadAction<IloadSchema>) => {
             state.loadSchems.push(action.payload);
         },
+        editLoadSchema: (
+            state,
+            action: PayloadAction<{ schema: FormType; name: string }>,
+        ) => {
+            const { schema, name } = action.payload;
+            const curInd = state.loadSchems.findIndex(
+                (form) => form.name === name,
+            );
+            state.loadSchems[curInd] = { schema, name };
+        },
         deleteLoadSchema: (state, action: PayloadAction<string>) => {
             state.loadSchems = state.loadSchems.filter(
                 (el) => el.name !== action.payload,
@@ -60,6 +70,7 @@ export const {
     setOption,
     addLoadSchema,
     deleteLoadSchema,
+    editLoadSchema,
     setCurNameSchema,
 } = builderSlice.actions;
 export default builderSlice.reducer;
