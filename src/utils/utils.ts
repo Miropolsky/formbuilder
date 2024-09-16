@@ -559,6 +559,7 @@ export function formOptions(lang: LanguagesType) {
 }
 export type FormOptionsType = ReturnType<typeof formOptions>;
 export interface IloadSchema {
+    // id: number;
     name: string;
     schema: FormType;
 }
