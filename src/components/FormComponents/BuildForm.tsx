@@ -1,10 +1,12 @@
 import { FormBuilder, FormType } from "@formio/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
-import { formOptions } from "../../utils/utils";
+import { CustomSchemaType, formOptions } from "../../utils/utils";
 import {
-    addLoadSchema,
-    editLoadSchema,
+    addForm,
+    deleteForm,
+    editForm,
+    getAllForms,
     setCurNameSchema,
     setSchema,
 } from "../../redux/builder";
@@ -18,7 +20,9 @@ export default function BuildForm() {
     const globalSchema = useStoreSelector((state) => state.builder.schema);
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
     const [nameForm, setNameForm] = useState("");
-    const [localSchema, setLocalSchema] = useState<FormType>({
+    const [localSchema, setLocalSchema] = useState<CustomSchemaType>({
+        name: "",
+        id: "",
         display: "form",
         components: [],
     });
@@ -27,8 +31,18 @@ export default function BuildForm() {
 
     const onFormChange = useCallback((newSchema: FormType) => {
         if (typeof newSchema === "object" && newSchema !== null) {
-            setLocalSchema(newSchema);
-            dispatch(setSchema(newSchema));
+            setLocalSchema({
+                ...newSchema,
+                id: localSchema.id,
+                name: localSchema.name,
+            });
+            dispatch(
+                setSchema({
+                    ...newSchema,
+                    id: localSchema.id,
+                    name: localSchema.name,
+                }),
+            );
         } else {
             console.error("Некорректные данные схемы");
         }
@@ -42,15 +56,15 @@ export default function BuildForm() {
             alert("Невозможно сохранить пустую форму");
             return;
         }
-        let nameForm = prompt("Введите название формы");
+        let nameForm = prompt("Введите название формы", localSchema.name);
         if (
             savedForms.find((el) => el.name === nameForm) !== undefined &&
             nameForm
         ) {
-            handleEditLoadSchema(nameForm);
+            handleEditLoadSchema();
         } else if (nameForm && nameForm.trim()) {
-            const newForm = { name: nameForm, schema: localSchema };
-            dispatch(addLoadSchema(newForm));
+            const newForm = { name: nameForm, schema: localSchema, id: "" };
+            dispatch(addForm(newForm));
             dispatch(setCurNameSchema(""));
             setNameForm("");
             alert("Форма добавлена в список сохраненных!");
@@ -84,16 +98,22 @@ export default function BuildForm() {
             setSchema({
                 display: "form",
                 components: [],
+                id: "",
+                name: "",
             }),
         );
         setLocalSchema({
             display: "form",
             components: [],
+            id: "",
+            name: "",
         });
         setNameForm("");
         schemaRef.current = {
             display: "form",
             components: [],
+            id: "",
+            name: "",
         };
     };
 
@@ -108,7 +128,10 @@ export default function BuildForm() {
             if (typeof result === "string") {
                 try {
                     const loadedSchema = JSON.parse(result);
+                    schemaRef.current = loadedSchema;
                     dispatch(setSchema(loadedSchema));
+                    setNameForm(file.name.slice(0, -5));
+                    setLocalSchema(loadedSchema);
                     dispatch(setCurNameSchema(file.name.slice(0, -5)));
                     alert("Форма загружена!");
                 } catch (error) {
@@ -124,8 +147,19 @@ export default function BuildForm() {
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
-            schemaRef.current = form.schema;
-            dispatch(setSchema(form.schema));
+            schemaRef.current = {
+                ...form.schema,
+                id: form.id,
+                name: form.name,
+            };
+            setLocalSchema({
+                ...form.schema,
+                id: form.id,
+                name: form.name,
+            });
+            dispatch(
+                setSchema({ ...form.schema, id: form.id, name: form.name }),
+            );
             dispatch(setCurNameSchema(form.name));
             alert("Форма загружена!");
         } else {
@@ -133,8 +167,14 @@ export default function BuildForm() {
         }
     };
 
-    const handleEditLoadSchema = (name: string) => {
-        dispatch(editLoadSchema({ schema: localSchema, name }));
+    const handleEditLoadSchema = () => {
+        dispatch(
+            editForm({
+                schema: localSchema,
+                name: localSchema.name,
+                id: localSchema.id,
+            }),
+        );
         alert("Форма перезаписана");
     };
 
@@ -142,6 +182,19 @@ export default function BuildForm() {
         setNameForm(e.target.value);
         handleLoadSelectedForm(e.target.value);
     };
+    const deleateFormLoadSchema = () => {
+        if (schemaRef.current) {
+            dispatch(deleteForm(schemaRef.current.id));
+            alert(`Форма удалена`);
+            resetFormSchema();
+        } else {
+            alert("Форма не выбрана");
+        }
+    };
+
+    useEffect(() => {
+        dispatch(getAllForms());
+    }, []);
 
     return (
         <>
@@ -153,16 +206,19 @@ export default function BuildForm() {
                                 Выберите сохраненную форму
                             </label>
                             <Form.Select
+                                key="selectSaveForm"
                                 aria-label="Выберите сохраненную форму"
                                 value={nameForm}
                                 onChange={(e) => onChangeSelect(e)}
                                 className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                             >
-                                <option value="">Выберите форму</option>
+                                <option key="default" value="">
+                                    Выберите форму
+                                </option>
                                 {savedForms.map((form) => (
                                     <>
                                         <option
-                                            key={form.name}
+                                            key={form.name + form.id}
                                             value={form.name}
                                         >
                                             {form.name}
@@ -171,6 +227,7 @@ export default function BuildForm() {
                                 ))}
                             </Form.Select>
                         </div>
+
                         <div>
                             <div className="text-xl font-semibold mb-2 text-gray-700">
                                 Загрузить форму с компьютера
@@ -183,6 +240,7 @@ export default function BuildForm() {
                             />
                         </div>
                     </div>
+
                     <div className="flex gap-x-4 items-end mt-3">
                         <Button
                             className="mt-2 h-10 bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
@@ -190,7 +248,12 @@ export default function BuildForm() {
                         >
                             Сохранить форму в список
                         </Button>
-
+                        <Button
+                            className="mt-2 h-10 bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
+                            onClick={() => console.log(localSchema)}
+                        >
+                            test
+                        </Button>
                         <Button
                             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300"
                             onClick={downloadFormSchema}
@@ -203,11 +266,19 @@ export default function BuildForm() {
                         >
                             Очистить форму
                         </Button>
+                        <Button
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-300"
+                            onClick={deleateFormLoadSchema}
+                        >
+                            Удалить выбранную форму
+                        </Button>
                     </div>
                 </form>
                 <div className="bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm min-h-[700px] ">
                     <FormBuilder
-                        initialForm={schemaRef.current}
+                        initialForm={
+                            schemaRef.current ? schemaRef.current : undefined
+                        }
                         options={customOptions}
                         onChange={onFormChange}
                     />

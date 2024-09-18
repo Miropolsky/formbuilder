@@ -19,7 +19,10 @@ export const apiForms = {
     async addForm(schema: IloadSchema): Promise<ApiResponse<IloadSchema>> {
         return await instance.post("/addForm", schema);
     },
-    async deleteForm(id: number): Promise<ApiResponse<null>> {
-        return await instance.delete(`/forms/${id}`);
+    async deleteForm(id: string): Promise<ApiResponse<null>> {
+        return await instance.delete(`/deleteForm/${id}`);
+    },
+    async editForm(schema: IloadSchema): Promise<ApiResponse<null>> {
+        return await instance.put(`/editForm/${schema.id}`, schema);
     },
 };

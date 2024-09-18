@@ -472,6 +472,62 @@ export function formOptions(lang: LanguagesType) {
                     currency: false,
                     address: false,
                     signature: false,
+                    phoneNumber: {
+                        title:
+                            translations[lang]["Phone Number"] ||
+                            "Phone Number",
+                        icon: "phone-square",
+                        schema: {
+                            label:
+                                translations[lang]["Phone Number"] ||
+                                "Phone Number",
+                            type: "phoneNumber",
+                            key: "phoneNumber",
+                            input: true,
+                        },
+                    },
+                    tags: {
+                        title: translations[lang]["Tags"] || "Tags",
+                        icon: "tags",
+                        schema: {
+                            label: translations[lang]["Tags"] || "Tags",
+                            type: "tags",
+                            key: "tags",
+                            input: true,
+                        },
+                    },
+                    datetime: {
+                        title:
+                            translations[lang]["Date / Time"] || "Date / Time",
+                        icon: "calendar",
+                        schema: {
+                            label:
+                                translations[lang]["Date / Time"] ||
+                                "Date / Time",
+                            type: "datetime",
+                            key: "datetime",
+                            input: true,
+                        },
+                    },
+                    day: {
+                        title: translations[lang]["Day"] || "Day",
+                        icon: "calendar",
+                        schema: {
+                            label: translations[lang]["Day"] || "Day",
+                            type: "day",
+                            key: "day",
+                            input: true,
+                        },
+                    },
+                    survey: {
+                        title: translations[lang]["Survey"] || "Survey",
+                        icon: "list",
+                        schema: {
+                            label: translations[lang]["Survey"] || "Survey",
+                            type: "survey",
+                            key: "survey",
+                        },
+                    },
                 },
             },
             premium: false,
@@ -536,7 +592,7 @@ export function formOptions(lang: LanguagesType) {
                     },
                     tabs: {
                         title: lang === "ru" ? "Вкладки" : "Tabs",
-                        icon: "foler",
+                        icon: "folder",
                         schema: {
                             label: lang === "ru" ? "Вкладки" : "Tabs",
                             type: "tabs",
@@ -554,12 +610,75 @@ export function formOptions(lang: LanguagesType) {
                     },
                 },
             },
+            data: {
+                title: "Расположение",
+                default: false,
+                components: {
+                    hidden: {
+                        title: lang === "ru" ? "Hidden" : "Скрытие",
+                        icon: "code",
+                        schema: {
+                            label: lang === "ru" ? "Hidden" : "Скрытие",
+                            type: "hidden",
+                            key: "hidden",
+                        },
+                    },
+                    container: {
+                        title: lang === "ru" ? "Контейнер" : "Container",
+                        icon: "folder-open",
+                        schema: {
+                            label: lang === "ru" ? "Контейнер" : "Container",
+                            type: "container",
+                            key: "container",
+                        },
+                    },
+                    datamap: {
+                        title: lang === "ru" ? "Карта данных" : "Data Map",
+                        icon: "menu-button-wide",
+                        schema: {
+                            label: lang === "ru" ? "Карта данных" : "Data Map",
+                            type: "datamap",
+                            key: "datamap",
+                        },
+                    },
+                    datagrid: {
+                        title: lang === "ru" ? "Таблица данных" : "Data Grid",
+                        icon: "grid-3x3-gap-fill",
+                        schema: {
+                            label:
+                                lang === "ru" ? "Таблица данных" : "Data Grid",
+                            type: "datagrid",
+                            key: "datagrid",
+                        },
+                    },
+                    editgrid: {
+                        title:
+                            lang === "ru"
+                                ? "Редактирование данных"
+                                : "Edit Grid",
+                        icon: "view-stacked",
+                        schema: {
+                            label:
+                                lang === "ru"
+                                    ? "Редактирование данных"
+                                    : "Edit Grid",
+                            type: "editgrid",
+                            key: "editgrid",
+                        },
+                    },
+                },
+            },
         },
     };
 }
 export type FormOptionsType = ReturnType<typeof formOptions>;
 export interface IloadSchema {
-    // id: number;
+    id: string;
     name: string;
     schema: FormType;
+}
+
+export interface CustomSchemaType extends FormType {
+    id: string;
+    name: string;
 }

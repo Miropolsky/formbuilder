@@ -17,17 +17,19 @@ export default function SchemaJSON() {
             {isShow && (
                 <Card className="my-6 w-full max-w-4xl bg-white shadow-lg rounded-lg transition-opacity duration-300 ease-in-out">
                     <Card.Body className="p-6">
-                        <ReactJson
-                            src={schema}
-                            name={null}
-                            collapsed={false}
-                            theme="rjv-default"
-                            style={{
-                                backgroundColor: "#f9f9f9",
-                                padding: "20px",
-                                borderRadius: "10px",
-                            }}
-                        />
+                        {schema && (
+                            <ReactJson
+                                src={schema}
+                                name={null}
+                                collapsed={false}
+                                theme="rjv-default"
+                                style={{
+                                    backgroundColor: "#f9f9f9",
+                                    padding: "20px",
+                                    borderRadius: "10px",
+                                }}
+                            />
+                        )}
                     </Card.Body>
                 </Card>
             )}

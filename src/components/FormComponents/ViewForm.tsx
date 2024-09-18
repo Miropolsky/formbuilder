@@ -15,7 +15,7 @@ export default function ViewForm() {
                 {isShow ? "Скрыть форму" : "Показать форму"}
             </Button>
 
-            {isShow && schema.components && (
+            {isShow && schema && schema.components && (
                 <Card className="my-6 w-full p-3 bg-white shadow-lg rounded-lg transition-opacity duration-300 ease-in-out">
                     <Form src={schema as FormType} />
                 </Card>
