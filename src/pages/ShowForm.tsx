@@ -1,9 +1,10 @@
 import { Form as FormBootStrap } from "react-bootstrap";
 import { Form, FormType } from "@formio/react";
 import { CustomSchemaType, IloadSchema } from "../utils/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../redux/store";
 import { getAllForms } from "../redux/builder";
+import { Webform } from "@formio/js";
 
 export default function ShowForm() {
     const [loadSchema, setLoadSchema] = useState<null | CustomSchemaType>(null);
@@ -18,11 +19,27 @@ export default function ShowForm() {
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
-            setLoadSchema({ ...form.schema, id: form.id });
+            setLoadSchema({ ...form.schema, id: form.id, name });
             alert("Форма загружена!");
         } else {
             alert("Форма не найдена.");
         }
+    };
+
+    const formInstance = useRef<null | Webform>(null);
+
+    const handleFormReady = (instance: Webform) => {
+        formInstance.current = instance;
+    };
+
+    const handleClick = () => {
+        if (!formInstance.current) {
+            console.log("Our form isn't quite ready yet.");
+            return;
+        }
+        console.log(formInstance.current);
+        // formInstance.current.getComponent("firstName")?.setValue("John");
+        // formInstance.current.getComponent("lastName")?.setValue("Smith");
     };
 
     useEffect(() => {
@@ -51,7 +68,11 @@ export default function ShowForm() {
                     ))}
                 </FormBootStrap.Select>
             </div>
-            <div>{loadSchema && <Form src={loadSchema} />}</div>
+            <div>
+                {loadSchema && (
+                    <Form src={loadSchema} onFormReady={handleFormReady} />
+                )}
+            </div>
         </div>
     );
 }

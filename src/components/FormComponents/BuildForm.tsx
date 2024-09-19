@@ -19,7 +19,6 @@ export default function BuildForm() {
     const nameSchema = useStoreSelector((state) => state.builder.curNameSchema);
     const globalSchema = useStoreSelector((state) => state.builder.schema);
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
-    const [nameForm, setNameForm] = useState("");
     const [localSchema, setLocalSchema] = useState<CustomSchemaType>({
         name: "",
         id: "",
@@ -56,7 +55,7 @@ export default function BuildForm() {
             alert("Невозможно сохранить пустую форму");
             return;
         }
-        let nameForm = prompt("Введите название формы", localSchema.name);
+        let nameForm = prompt("Введите название формы", nameSchema);
         if (
             savedForms.find((el) => el.name === nameForm) !== undefined &&
             nameForm
@@ -66,7 +65,6 @@ export default function BuildForm() {
             const newForm = { name: nameForm, schema: localSchema, id: "" };
             dispatch(addForm(newForm));
             dispatch(setCurNameSchema(""));
-            setNameForm("");
             alert("Форма добавлена в список сохраненных!");
         } else {
             alert("Некорректное имя формы");
@@ -74,8 +72,8 @@ export default function BuildForm() {
     };
     useEffect(() => {
         schemaRef.current = globalSchema;
-        setNameForm(nameSchema);
     }, [nameSchema]);
+
     const downloadFormSchema = () => {
         if (localSchema.components.length === 0) {
             alert("Невозможно сохранить пустую форму");
@@ -94,27 +92,15 @@ export default function BuildForm() {
     };
     const resetFormSchema = () => {
         dispatch(setCurNameSchema(""));
-        dispatch(
-            setSchema({
-                display: "form",
-                components: [],
-                id: "",
-                name: "",
-            }),
-        );
-        setLocalSchema({
-            display: "form",
-            components: [],
-            id: "",
-            name: "",
-        });
-        setNameForm("");
-        schemaRef.current = {
+        const defaultFormBuilder: CustomSchemaType = {
             display: "form",
             components: [],
             id: "",
             name: "",
         };
+        dispatch(setSchema(defaultFormBuilder));
+        setLocalSchema(defaultFormBuilder);
+        schemaRef.current = defaultFormBuilder;
     };
 
     const loadFormSchema = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,7 +116,6 @@ export default function BuildForm() {
                     const loadedSchema = JSON.parse(result);
                     schemaRef.current = loadedSchema;
                     dispatch(setSchema(loadedSchema));
-                    setNameForm(file.name.slice(0, -5));
                     setLocalSchema(loadedSchema);
                     dispatch(setCurNameSchema(file.name.slice(0, -5)));
                     alert("Форма загружена!");
@@ -147,19 +132,14 @@ export default function BuildForm() {
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
-            schemaRef.current = {
+            const newForm = {
                 ...form.schema,
                 id: form.id,
                 name: form.name,
             };
-            setLocalSchema({
-                ...form.schema,
-                id: form.id,
-                name: form.name,
-            });
-            dispatch(
-                setSchema({ ...form.schema, id: form.id, name: form.name }),
-            );
+            schemaRef.current = newForm;
+            setLocalSchema(newForm);
+            dispatch(setSchema(newForm));
             dispatch(setCurNameSchema(form.name));
             alert("Форма загружена!");
         } else {
@@ -179,7 +159,7 @@ export default function BuildForm() {
     };
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setNameForm(e.target.value);
+        dispatch(setCurNameSchema(e.target.value));
         handleLoadSelectedForm(e.target.value);
     };
     const deleateFormLoadSchema = () => {
@@ -208,7 +188,7 @@ export default function BuildForm() {
                             <Form.Select
                                 key="selectSaveForm"
                                 aria-label="Выберите сохраненную форму"
-                                value={nameForm}
+                                value={nameSchema}
                                 onChange={(e) => onChangeSelect(e)}
                                 className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                             >

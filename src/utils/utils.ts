@@ -401,8 +401,8 @@ export function formOptions(lang: LanguagesType) {
 
         builder: {
             basic: {
+                default: true,
                 title: translations[lang]["Basic Elements"] || "Basic Elements",
-                default: false,
                 components: {
                     textfield: {
                         title: translations[lang]["Text Field"] || "Text Field",
