@@ -1,5 +1,5 @@
 import { FormBuilder, FormType } from "@formio/react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
 import { CustomSchemaType, formOptions } from "../../utils/utils";
 import {
@@ -13,8 +13,10 @@ import {
 import { translations } from "../../utils/constans";
 import { Button, Form } from "react-bootstrap";
 import { saveAs } from "file-saver";
+import CustomModal from "../HelpersForm/CustomModal";
 
 export default function BuildForm() {
+    const [isDelModal, setIsDelModal] = useState(false);
     const language = useStoreSelector((state) => state.builder.language);
     const nameSchema = useStoreSelector((state) => state.builder.curNameSchema);
     const globalSchema = useStoreSelector(
@@ -26,6 +28,12 @@ export default function BuildForm() {
 
     const onFormChange = useCallback((newSchema: FormType) => {
         if (typeof newSchema === "object" && newSchema !== null) {
+            // schemaRef.current = {
+            //     ...newSchema,
+            //     id: globalSchema ? globalSchema.id : "",
+            //     name: globalSchema ? globalSchema.name : nameSchema,
+            // };
+            console.log(newSchema);
             dispatch(
                 setSchema({
                     ...newSchema,
@@ -152,6 +160,7 @@ export default function BuildForm() {
         } else {
             alert("Форма не выбрана");
         }
+        setIsDelModal(false);
     };
 
     useEffect(() => {
@@ -219,7 +228,7 @@ export default function BuildForm() {
                         </Button>
                         <Button
                             className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all duration-300"
-                            onClick={deleateFormLoadSchema}
+                            onClick={() => setIsDelModal(true)}
                         >
                             Удалить выбранную форму
                         </Button>
@@ -228,18 +237,20 @@ export default function BuildForm() {
                 <div className="bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm min-h-[700px] ">
                     <FormBuilder
                         initialForm={
-                            schemaRef.current
-                                ? schemaRef.current
-                                : {
-                                      display: "form",
-                                      components: [],
-                                  }
+                            schemaRef.current ? schemaRef.current : undefined
                         }
                         options={customOptions}
                         onChange={onFormChange}
                     />
                 </div>
             </div>
+            {isDelModal && (
+                <CustomModal
+                    message={`Вы точно хотите удалить форму ${nameSchema}?`}
+                    onCancel={() => setIsDelModal(false)}
+                    onConfirm={() => deleateFormLoadSchema()}
+                />
+            )}
         </>
     );
 }

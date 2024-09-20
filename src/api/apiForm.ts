@@ -1,9 +1,8 @@
 import axios from "axios";
 import { CustomSchemaType } from "../utils/utils";
-// import { IloadSchema } from "../utils/utils";
 
 const instance = axios.create({
-    baseURL: "http://localhost:5000/", // Замените на ваш API URL
+    baseURL: "http://localhost:5000/",
     headers: {
         "Content-Type": "application/json",
     },

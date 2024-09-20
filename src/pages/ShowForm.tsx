@@ -11,11 +11,13 @@ export default function ShowForm() {
     const [nameForm, setNameForm] = useState("");
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
     const dispatch = useStoreDispatch();
-
+    const formInstance = useRef<null | Webform>(null);
+    console.log(savedForms);
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setNameForm(e.target.value);
         handleLoadSelectedForm(e.target.value);
     };
+
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
@@ -26,25 +28,30 @@ export default function ShowForm() {
         }
     };
 
-    const formInstance = useRef<null | Webform>(null);
-
     const handleFormReady = (instance: Webform) => {
         formInstance.current = instance;
     };
 
-    const handleClick = () => {
+    const handleButtonClick = () => {
         if (!formInstance.current) {
-            console.log("Our form isn't quite ready yet.");
+            console.log("Наша форма еще не готова.");
             return;
         }
-        console.log(formInstance.current);
-        // formInstance.current.getComponent("firstName")?.setValue("John");
-        // formInstance.current.getComponent("lastName")?.setValue("Smith");
+
+        const formData = formInstance.current.getValue(); // Получаем значения формы
+        console.log("Данные формы:", formData);
+    };
+
+    const handleEvent = (event: any) => {
+        if (event.type === "button" && event.component.key === "myButtonKey") {
+            // Замените myButtonKey на ключ вашей кнопки
+            handleButtonClick();
+        }
     };
 
     useEffect(() => {
         dispatch(getAllForms());
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="p-4">
@@ -55,23 +62,24 @@ export default function ShowForm() {
                 <FormBootStrap.Select
                     aria-label="Выберите сохраненную форму"
                     value={nameForm}
-                    onChange={(e) => onChangeSelect(e)}
+                    onChange={onChangeSelect}
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
-                    <option value="base">Выберите форму</option>
+                    <option value="">Выберите форму</option>
                     {savedForms.map((form) => (
-                        <>
-                            <option key={form.name} value={form.name}>
-                                {form.name}
-                            </option>
-                        </>
+                        <option key={form.name} value={form.name}>
+                            {form.name}
+                        </option>
                     ))}
                 </FormBootStrap.Select>
-                <Button onClick={handleClick}>Консоль лог</Button>
             </div>
             <div>
                 {loadSchema && (
-                    <Form src={loadSchema} onFormReady={handleFormReady} />
+                    <Form
+                        src={loadSchema}
+                        onFormReady={handleFormReady}
+                        onSubmit={handleEvent} // Обработчик событий
+                    />
                 )}
             </div>
         </div>
