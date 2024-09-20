@@ -1,6 +1,6 @@
-import { Form as FormBootStrap } from "react-bootstrap";
-import { Form, FormType } from "@formio/react";
-import { CustomSchemaType, IloadSchema } from "../utils/utils";
+import { Button, Form as FormBootStrap } from "react-bootstrap";
+import { Form } from "@formio/react";
+import { CustomSchemaType } from "../utils/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../redux/store";
 import { getAllForms } from "../redux/builder";
@@ -19,7 +19,7 @@ export default function ShowForm() {
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
-            setLoadSchema({ ...form.schema, id: form.id, name });
+            setLoadSchema(form);
             alert("Форма загружена!");
         } else {
             alert("Форма не найдена.");
@@ -67,6 +67,7 @@ export default function ShowForm() {
                         </>
                     ))}
                 </FormBootStrap.Select>
+                <Button onClick={handleClick}>Консоль лог</Button>
             </div>
             <div>
                 {loadSchema && (

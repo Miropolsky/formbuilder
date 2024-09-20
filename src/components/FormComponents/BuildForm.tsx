@@ -1,5 +1,5 @@
 import { FormBuilder, FormType } from "@formio/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
 import { CustomSchemaType, formOptions } from "../../utils/utils";
 import {
@@ -17,29 +17,20 @@ import { saveAs } from "file-saver";
 export default function BuildForm() {
     const language = useStoreSelector((state) => state.builder.language);
     const nameSchema = useStoreSelector((state) => state.builder.curNameSchema);
-    const globalSchema = useStoreSelector((state) => state.builder.schema);
+    const globalSchema = useStoreSelector(
+        (state) => state.builder.schema,
+    ) as CustomSchemaType;
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
-    const [localSchema, setLocalSchema] = useState<CustomSchemaType>({
-        name: "",
-        id: "",
-        display: "form",
-        components: [],
-    });
     const schemaRef = useRef(globalSchema);
     const dispatch = useStoreDispatch();
 
     const onFormChange = useCallback((newSchema: FormType) => {
         if (typeof newSchema === "object" && newSchema !== null) {
-            setLocalSchema({
-                ...newSchema,
-                id: localSchema.id,
-                name: localSchema.name,
-            });
             dispatch(
                 setSchema({
                     ...newSchema,
-                    id: localSchema.id,
-                    name: localSchema.name,
+                    id: globalSchema ? globalSchema.id : "",
+                    name: globalSchema ? globalSchema.name : nameSchema,
                 }),
             );
         } else {
@@ -51,7 +42,7 @@ export default function BuildForm() {
         [language],
     );
     const handleSaveForm = () => {
-        if (localSchema.components.length === 0) {
+        if (globalSchema.components.length === 0) {
             alert("Невозможно сохранить пустую форму");
             return;
         }
@@ -62,8 +53,7 @@ export default function BuildForm() {
         ) {
             handleEditLoadSchema();
         } else if (nameForm && nameForm.trim()) {
-            const newForm = { name: nameForm, schema: localSchema, id: "" };
-            dispatch(addForm(newForm));
+            dispatch(addForm({ ...globalSchema, name: nameForm }));
             dispatch(setCurNameSchema(""));
             alert("Форма добавлена в список сохраненных!");
         } else {
@@ -75,13 +65,13 @@ export default function BuildForm() {
     }, [nameSchema]);
 
     const downloadFormSchema = () => {
-        if (localSchema.components.length === 0) {
+        if (globalSchema.components.length === 0) {
             alert("Невозможно сохранить пустую форму");
             return;
         }
         let nameForm = prompt("Введите название формы");
         if (nameForm && nameForm.trim()) {
-            const blob = new Blob([JSON.stringify(localSchema, null, 2)], {
+            const blob = new Blob([JSON.stringify(globalSchema, null, 2)], {
                 type: "application/json",
             });
             saveAs(blob, nameForm);
@@ -99,7 +89,6 @@ export default function BuildForm() {
             name: "",
         };
         dispatch(setSchema(defaultFormBuilder));
-        setLocalSchema(defaultFormBuilder);
         schemaRef.current = defaultFormBuilder;
     };
 
@@ -114,9 +103,9 @@ export default function BuildForm() {
             if (typeof result === "string") {
                 try {
                     const loadedSchema = JSON.parse(result);
+                    console.log();
                     schemaRef.current = loadedSchema;
                     dispatch(setSchema(loadedSchema));
-                    setLocalSchema(loadedSchema);
                     dispatch(setCurNameSchema(file.name.slice(0, -5)));
                     alert("Форма загружена!");
                 } catch (error) {
@@ -132,14 +121,8 @@ export default function BuildForm() {
     const handleLoadSelectedForm = (name: string) => {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
-            const newForm = {
-                ...form.schema,
-                id: form.id,
-                name: form.name,
-            };
-            schemaRef.current = newForm;
-            setLocalSchema(newForm);
-            dispatch(setSchema(newForm));
+            schemaRef.current = form;
+            dispatch(setSchema(form));
             dispatch(setCurNameSchema(form.name));
             alert("Форма загружена!");
         } else {
@@ -150,9 +133,8 @@ export default function BuildForm() {
     const handleEditLoadSchema = () => {
         dispatch(
             editForm({
-                schema: localSchema,
-                name: localSchema.name,
-                id: localSchema.id,
+                ...schemaRef.current,
+                components: [...globalSchema.components],
             }),
         );
         alert("Форма перезаписана");
@@ -196,14 +178,9 @@ export default function BuildForm() {
                                     Выберите форму
                                 </option>
                                 {savedForms.map((form) => (
-                                    <>
-                                        <option
-                                            key={form.name + form.id}
-                                            value={form.name}
-                                        >
-                                            {form.name}
-                                        </option>
-                                    </>
+                                    <option key={form.id} value={form.name}>
+                                        {form.name}
+                                    </option>
                                 ))}
                             </Form.Select>
                         </div>
@@ -229,12 +206,6 @@ export default function BuildForm() {
                             Сохранить форму в список
                         </Button>
                         <Button
-                            className="mt-2 h-10 bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
-                            onClick={() => console.log(localSchema)}
-                        >
-                            test
-                        </Button>
-                        <Button
                             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300"
                             onClick={downloadFormSchema}
                         >
@@ -257,7 +228,12 @@ export default function BuildForm() {
                 <div className="bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm min-h-[700px] ">
                     <FormBuilder
                         initialForm={
-                            schemaRef.current ? schemaRef.current : undefined
+                            schemaRef.current
+                                ? schemaRef.current
+                                : {
+                                      display: "form",
+                                      components: [],
+                                  }
                         }
                         options={customOptions}
                         onChange={onFormChange}

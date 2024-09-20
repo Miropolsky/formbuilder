@@ -1,5 +1,6 @@
 import axios from "axios";
-import { IloadSchema } from "../utils/utils";
+import { CustomSchemaType } from "../utils/utils";
+// import { IloadSchema } from "../utils/utils";
 
 const instance = axios.create({
     baseURL: "http://localhost:5000/", // Замените на ваш API URL
@@ -13,16 +14,18 @@ interface ApiResponse<T> {
 }
 
 export const apiForms = {
-    async getAllForms(): Promise<ApiResponse<IloadSchema[]>> {
+    async getAllForms(): Promise<ApiResponse<CustomSchemaType[]>> {
         return await instance.get("/forms");
     },
-    async addForm(schema: IloadSchema): Promise<ApiResponse<IloadSchema>> {
+    async addForm(
+        schema: CustomSchemaType,
+    ): Promise<ApiResponse<CustomSchemaType>> {
         return await instance.post("/addForm", schema);
     },
     async deleteForm(id: string): Promise<ApiResponse<null>> {
         return await instance.delete(`/deleteForm/${id}`);
     },
-    async editForm(schema: IloadSchema): Promise<ApiResponse<null>> {
+    async editForm(schema: CustomSchemaType): Promise<ApiResponse<null>> {
         return await instance.put(`/editForm/${schema.id}`, schema);
     },
 };

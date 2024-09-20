@@ -398,7 +398,7 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
         },
-
+        noDefaultSubmitButton: true,
         builder: {
             basic: {
                 default: true,
@@ -672,11 +672,11 @@ export function formOptions(lang: LanguagesType) {
     };
 }
 export type FormOptionsType = ReturnType<typeof formOptions>;
-export interface IloadSchema {
-    id: string;
-    name: string;
-    schema: FormType;
-}
+// export interface IloadSchema {
+//     id: string;
+//     name: string;
+//     schema: FormType;
+// }
 
 export interface CustomSchemaType extends FormType {
     id: string;

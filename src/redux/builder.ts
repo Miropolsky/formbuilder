@@ -2,7 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
     CustomSchemaType,
     FormOptionsType,
-    IloadSchema,
+    // IloadSchema,
     LanguagesType,
     formOptions,
 } from "../utils/utils";
@@ -12,7 +12,7 @@ interface InitialType {
     language: LanguagesType;
     schema: CustomSchemaType | null;
     option: FormOptionsType;
-    loadSchems: IloadSchema[];
+    loadSchems: CustomSchemaType[];
     curNameSchema: string;
 }
 
@@ -31,14 +31,14 @@ export const getAllForms = createAsyncThunk("getAllForms", async () => {
 
 export const addForm = createAsyncThunk(
     "addForm",
-    async (schema: IloadSchema) => {
+    async (schema: CustomSchemaType) => {
         const response = await apiForms.addForm(schema);
         return response.data;
     },
 );
 export const editForm = createAsyncThunk(
     "editForm",
-    async (schema: IloadSchema) => {
+    async (schema: CustomSchemaType) => {
         const response = await apiForms.editForm(schema);
         return response.data;
     },
@@ -87,7 +87,7 @@ const builderSlice = createSlice({
                     state.loadSchems[index] = {
                         ...state.loadSchems[index],
                         ...action.meta.arg,
-                    }; // Используйте action.payload, чтобы заменить форму
+                    };
                 }
             });
     },

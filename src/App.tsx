@@ -1,8 +1,4 @@
-import {
-    RouterProvider,
-    createBrowserRouter,
-    createHashRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Header from "./components/Header";
 import "./index.css";
 import BuilderPage from "./pages/BuilderPage";
