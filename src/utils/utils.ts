@@ -14,8 +14,8 @@ export function formOptions(lang: LanguagesType) {
         noNewEdit: true,
         editForm: {
             textfield: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -62,8 +62,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             password: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,

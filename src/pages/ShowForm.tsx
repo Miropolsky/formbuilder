@@ -12,7 +12,7 @@ export default function ShowForm() {
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
     const dispatch = useStoreDispatch();
     const formInstance = useRef<null | Webform>(null);
-    console.log(savedForms);
+
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setNameForm(e.target.value);
         handleLoadSelectedForm(e.target.value);
@@ -43,6 +43,7 @@ export default function ShowForm() {
     };
 
     const handleEvent = (event: any) => {
+        console.log(event);
         if (event.type === "button" && event.component.key === "myButtonKey") {
             // Замените myButtonKey на ключ вашей кнопки
             handleButtonClick();
@@ -78,7 +79,7 @@ export default function ShowForm() {
                     <Form
                         src={loadSchema}
                         onFormReady={handleFormReady}
-                        onSubmit={handleEvent} // Обработчик событий
+                        onSubmitDone={handleEvent} // Обработчик событий
                     />
                 )}
             </div>
