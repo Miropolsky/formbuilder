@@ -110,8 +110,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             number: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -158,8 +158,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             time: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -206,8 +206,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             address: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -254,8 +254,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             url: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -302,8 +302,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             email: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,
@@ -350,8 +350,8 @@ export function formOptions(lang: LanguagesType) {
                 },
             ],
             currency: [
-                { key: "api", ignore: true },
-                { key: "layout", ignore: true },
+                // { key: "api", ignore: true },
+                // { key: "layout", ignore: true },
                 {
                     key: "display",
                     ignore: false,

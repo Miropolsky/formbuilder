@@ -108,6 +108,41 @@ app.post('/login', (req, res) => {
   res.status(200).send('Логин принят');
 });
 
+// Маршрут для сохранения произвольных данных
+app.post('/saveData', async (req, res) => {
+  const formData = req.body;
+  console.log(formData)
+  try {
+    // Читаем текущие данные
+    const data = await readFileAsync('./server/ValueSaveForm.json', 'utf8');
+    const savedData = JSON.parse(data);
+
+    // Добавляем новые данные
+    if (savedData) {
+      savedData.push(formData);
+    }
+
+
+    // Записываем обновленные данные в файл
+    await writeFileAsync('./server/ValueSaveForm.json', JSON.stringify(savedData), 'utf8');
+    res.status(201).send('Данные сохранены');
+  } catch (err) {
+    console.error('Ошибка при записи файла:', err);
+    res.status(500).send('Ошибка при записи файла');
+  }
+});
+
+// Маршрут для получения сохраненных данных
+app.get('/getData', async (req, res) => {
+  try {
+    const data = await readFileAsync('./server/ValueSaveForm.json', 'utf8');
+    const savedData = JSON.parse(data);
+    res.json(savedData);
+  } catch (err) {
+    console.error('Ошибка при чтении файла:', err);
+    res.status(500).send('Ошибка при чтении файла');
+  }
+});
 
 // Запуск сервера
 app.listen(PORT, () => {

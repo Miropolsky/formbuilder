@@ -74,12 +74,21 @@ export default function ShowForm() {
                     ))}
                 </FormBootStrap.Select>
             </div>
+            <div className="mt-3 flex justify-end mr-10">
+                <Button
+                    onClick={() =>
+                        console.log(formInstance.current?.getValue().data)
+                    }
+                >
+                    Сохранить форму
+                </Button>
+            </div>
             <div>
                 {loadSchema && (
                     <Form
                         src={loadSchema}
                         onFormReady={handleFormReady}
-                        onSubmitDone={handleEvent} // Обработчик событий
+                        onSubmitDone={handleEvent} // Обработчик событий // Можно создать кнопку для сохранения значений, а не создавать ее в форм буилдере, тогда через нее будет универсальный url, который все значения форм принимает и потом будет отображать
                     />
                 )}
             </div>
