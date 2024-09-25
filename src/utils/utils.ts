@@ -13,6 +13,38 @@ export function formOptions(lang: LanguagesType) {
         language: lang,
         noNewEdit: true,
         editForm: {
+            button: [
+                {
+                    key: "display",
+                    ignore: false,
+                    components: [
+                        {
+                            key: "action",
+                            type: "select",
+                            label: "Action",
+                            dataSrc: "values", // Указываем источник данных как массив значений
+                            data: {
+                                values: [
+                                    { label: "URL", value: "url" }, // Добавляем "URL" как вариант
+                                    { label: "Submit", value: "submit" },
+                                    { label: "Reset", value: "reset" },
+                                ],
+                            },
+                            defaultValue: { label: "URL", value: "url" }, // Устанавливаем "url" по умолчанию
+                        },
+                        {
+                            key: "headers", // Поле для заголовков
+                            type: "datagrid", // Тип поля — таблица (для заголовков)
+                            defaultValue: [
+                                {
+                                    header: "Content-Type",
+                                    value: "application/json",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
             textfield: [
                 // { key: "api", ignore: true },
                 // { key: "layout", ignore: true },
@@ -681,4 +713,11 @@ export type FormOptionsType = ReturnType<typeof formOptions>;
 export interface CustomSchemaType extends FormType {
     id: string;
     name: string;
+}
+
+export interface LoadValues {
+    id: string;
+    name: string;
+    data: Record<string, any>;
+    metadata?: Record<string, any>;
 }

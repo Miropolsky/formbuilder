@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CustomSchemaType } from "../utils/utils";
+import { CustomSchemaType, LoadValues } from "../utils/utils";
 
 const instance = axios.create({
     baseURL: "http://localhost:5000/",
@@ -26,5 +26,13 @@ export const apiForms = {
     },
     async editForm(schema: CustomSchemaType): Promise<ApiResponse<null>> {
         return await instance.put(`/editForm/${schema.id}`, schema);
+    },
+    async addValue(
+        value: Record<string, any>,
+    ): Promise<ApiResponse<LoadValues>> {
+        return await instance.post("/saveData", value);
+    },
+    async getAllValue(): Promise<ApiResponse<LoadValues[]>> {
+        return await instance.get("/getData");
     },
 };

@@ -3,7 +3,7 @@ import { Form } from "@formio/react";
 import { CustomSchemaType } from "../utils/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../redux/store";
-import { getAllForms } from "../redux/builder";
+import { addValue, getAllForms } from "../redux/builder";
 import { Webform } from "@formio/js";
 
 export default function ShowForm() {
@@ -54,6 +54,18 @@ export default function ShowForm() {
         dispatch(getAllForms());
     }, [dispatch]);
 
+    const handleEventSaveValue = () => {
+        console.log(formInstance.current);
+        if (formInstance.current) {
+            dispatch(
+                addValue({
+                    data: { ...formInstance.current?.getValue().data },
+                    name: nameForm,
+                }),
+            );
+        }
+    };
+
     return (
         <div className="p-4">
             <div className="w-1/3">
@@ -75,12 +87,8 @@ export default function ShowForm() {
                 </FormBootStrap.Select>
             </div>
             <div className="mt-3 flex justify-end mr-10">
-                <Button
-                    onClick={() =>
-                        console.log(formInstance.current?.getValue().data)
-                    }
-                >
-                    Сохранить форму
+                <Button onClick={handleEventSaveValue}>
+                    Сохранить значения
                 </Button>
             </div>
             <div>

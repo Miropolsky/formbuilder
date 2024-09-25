@@ -90,27 +90,28 @@ app.put('/editForm/:id', async (req, res) => {
 
 
 // Маршрут для логина
-app.post('/login', (req, res) => {
-  console.log(req.body)
-  if (!req.body.data) {
-    return res.status(400).send('Нет передаваемых данных');
-  }
-  const { login, password } = req.body.data;
-  // Проверяем, переданы ли login и password
-  if (!login || !password) {
-    return res.status(400).send('Необходимо указать login и password');
-  }
+// app.post('/login', (req, res) => {
+//   console.log(req.body)
+//   if (!req.body.data) {
+//     return res.status(400).send('Нет передаваемых данных');
+//   }
+//   const { login, password } = req.body.data;
+//   // Проверяем, переданы ли login и password
+//   if (!login || !password) {
+//     return res.status(400).send('Необходимо указать login и password');
+//   }
 
-  // Вывод логина в консоль
-  console.log(`Login: ${login}`);
+//   // Вывод логина в консоль
+//   console.log(`Login: ${login}`);
 
-  // Отправляем ответ клиенту
-  res.status(200).send('Логин принят');
-});
+//   // Отправляем ответ клиенту
+//   res.status(200).send('Логин принят');
+// });
 
 // Маршрут для сохранения произвольных данных
 app.post('/saveData', async (req, res) => {
   const formData = req.body;
+  formData.id = uuidv4();
   console.log(formData)
   try {
     // Читаем текущие данные

@@ -4,6 +4,7 @@ import {
     FormOptionsType,
     // IloadSchema,
     LanguagesType,
+    LoadValues,
     formOptions,
 } from "../utils/utils";
 import { apiForms } from "../api/apiForm";
@@ -14,6 +15,7 @@ interface InitialType {
     option: FormOptionsType;
     loadSchems: CustomSchemaType[];
     curNameSchema: string;
+    loadValues: LoadValues[];
 }
 
 const initialState: InitialType = {
@@ -22,10 +24,15 @@ const initialState: InitialType = {
     option: formOptions("ru"),
     loadSchems: [],
     curNameSchema: "",
+    loadValues: [],
 };
 
 export const getAllForms = createAsyncThunk("getAllForms", async () => {
     const response = await apiForms.getAllForms();
+    return response.data;
+});
+export const getAllValue = createAsyncThunk("getAllValue", async () => {
+    const response = await apiForms.getAllValue();
     return response.data;
 });
 
@@ -33,6 +40,13 @@ export const addForm = createAsyncThunk(
     "addForm",
     async (schema: CustomSchemaType) => {
         const response = await apiForms.addForm(schema);
+        return response.data;
+    },
+);
+export const addValue = createAsyncThunk(
+    "addValue",
+    async (value: Omit<LoadValues, "id">) => {
+        const response = await apiForms.addValue(value);
         return response.data;
     },
 );
@@ -78,6 +92,12 @@ const builderSlice = createSlice({
             })
             .addCase(addForm.fulfilled, (state, action) => {
                 state.loadSchems.push(action.meta.arg);
+            })
+            .addCase(addValue.fulfilled, (state, action) => {
+                state.loadValues.push(action.payload);
+            })
+            .addCase(getAllValue.fulfilled, (state, action) => {
+                state.loadValues = action.payload;
             })
             .addCase(editForm.fulfilled, (state, action) => {
                 const index = state.loadSchems.findIndex(
