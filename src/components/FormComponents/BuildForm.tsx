@@ -33,7 +33,7 @@ export default function BuildForm() {
             //     id: globalSchema ? globalSchema.id : "",
             //     name: globalSchema ? globalSchema.name : nameSchema,
             // };
-            console.log(newSchema);
+            // console.log(newSchema);
             dispatch(
                 setSchema({
                     ...newSchema,
