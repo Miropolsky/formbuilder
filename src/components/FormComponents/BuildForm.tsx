@@ -1,7 +1,11 @@
 import { FormBuilder, FormType } from "@formio/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
-import { CustomSchemaType, formOptions } from "../../utils/utils";
+import {
+    CustomSchemaType,
+    TypeCustomAlert,
+    formOptions,
+} from "../../utils/utils";
 import {
     addForm,
     deleteForm,
@@ -14,8 +18,11 @@ import { translations } from "../../utils/constans";
 import { Button, Form } from "react-bootstrap";
 import { saveAs } from "file-saver";
 import CustomModal from "../HelpersForm/CustomModal";
+import { CustomAlert } from "../HelpersForm/CustomAlert";
 
 export default function BuildForm() {
+    const [textAlert, setTextAlert] = useState("");
+    const [typeAlert, setTypeAlert] = useState<TypeCustomAlert>("error");
     const [isDelModal, setIsDelModal] = useState(false);
     const language = useStoreSelector((state) => state.builder.language);
     const nameSchema = useStoreSelector((state) => state.builder.curNameSchema);
@@ -51,7 +58,8 @@ export default function BuildForm() {
     );
     const handleSaveForm = () => {
         if (globalSchema.components.length === 0) {
-            alert("Невозможно сохранить пустую форму");
+            setTypeAlert("error");
+            setTextAlert("Невозможно сохранить пустую форму");
             return;
         }
         let nameForm = prompt("Введите название формы", nameSchema);
@@ -63,9 +71,11 @@ export default function BuildForm() {
         } else if (nameForm && nameForm.trim()) {
             dispatch(addForm({ ...globalSchema, name: nameForm }));
             dispatch(setCurNameSchema(""));
-            alert("Форма добавлена в список сохраненных!");
+            setTypeAlert("success");
+            setTextAlert("Форма добавлена в список сохраненных!");
         } else {
-            alert("Некорректное имя формы");
+            setTypeAlert("error");
+            setTextAlert("Некорректное имя формы");
         }
     };
     useEffect(() => {
@@ -74,7 +84,8 @@ export default function BuildForm() {
 
     const downloadFormSchema = () => {
         if (globalSchema.components.length === 0) {
-            alert("Невозможно сохранить пустую форму");
+            setTypeAlert("error");
+            setTextAlert("Невозможно сохранить пустую форму");
             return;
         }
         let nameForm = prompt("Введите название формы");
@@ -83,9 +94,11 @@ export default function BuildForm() {
                 type: "application/json",
             });
             saveAs(blob, nameForm);
-            alert("Форма сохранена!");
+            setTypeAlert("success");
+            setTextAlert("Форма сохранена!");
         } else {
-            alert("Некорректное имя формы");
+            setTypeAlert("error");
+            setTextAlert("Некорректное имя формы");
         }
     };
     const resetFormSchema = () => {
@@ -115,12 +128,15 @@ export default function BuildForm() {
                     schemaRef.current = loadedSchema;
                     dispatch(setSchema(loadedSchema));
                     dispatch(setCurNameSchema(file.name.slice(0, -5)));
-                    alert("Форма загружена!");
+                    setTypeAlert("success");
+                    setTextAlert("Форма загружена!");
                 } catch (error) {
-                    alert("Ошибка при загрузке формы");
+                    setTypeAlert("error");
+                    setTextAlert("Ошибка при загрузке формы");
                 }
             } else {
-                alert("Ошибка! Некорректные данные");
+                setTypeAlert("error");
+                setTextAlert("Ошибка! Некорректные данные");
             }
         };
         reader.readAsText(file);
@@ -132,9 +148,11 @@ export default function BuildForm() {
             schemaRef.current = form;
             dispatch(setSchema(form));
             dispatch(setCurNameSchema(form.name));
-            alert("Форма загружена!");
+            setTypeAlert("success");
+            setTextAlert("Форма загружена!");
         } else {
-            alert("Форма не найдена.");
+            setTypeAlert("error");
+            setTextAlert("Форма не найдена.");
         }
     };
 
@@ -145,7 +163,8 @@ export default function BuildForm() {
                 components: [...globalSchema.components],
             }),
         );
-        alert("Форма перезаписана");
+        setTypeAlert("success");
+        setTextAlert("Форма перезаписана");
     };
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -155,10 +174,12 @@ export default function BuildForm() {
     const deleateFormLoadSchema = () => {
         if (schemaRef.current) {
             dispatch(deleteForm(schemaRef.current.id));
-            alert(`Форма удалена`);
+            setTypeAlert("info");
+            setTextAlert(`Форма удалена`);
             resetFormSchema();
         } else {
-            alert("Форма не выбрана");
+            setTypeAlert("error");
+            setTextAlert("Форма не выбрана");
         }
         setIsDelModal(false);
     };
@@ -251,6 +272,13 @@ export default function BuildForm() {
                     onConfirm={() => deleateFormLoadSchema()}
                 />
             )}
+
+            <CustomAlert
+                onClose={() => setTextAlert("")}
+                isVisible={textAlert !== ""}
+                message={textAlert}
+                type={typeAlert}
+            />
         </>
     );
 }

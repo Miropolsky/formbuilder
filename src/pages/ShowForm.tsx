@@ -1,14 +1,18 @@
 import { Button, Form as FormBootStrap } from "react-bootstrap";
 import { Form } from "@formio/react";
-import { CustomSchemaType } from "../utils/utils";
+import { CustomSchemaType, TypeCustomAlert } from "../utils/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../redux/store";
 import { addValue, getAllForms } from "../redux/builder";
 import { Webform } from "@formio/js";
+import { CustomAlert } from "../components/HelpersForm/CustomAlert";
 
 export default function ShowForm() {
+    const [textAlert, setTextAlert] = useState("");
+    const [typeAlert, setTypeAlert] = useState<TypeCustomAlert>("error");
     const [loadSchema, setLoadSchema] = useState<null | CustomSchemaType>(null);
     const [nameForm, setNameForm] = useState("");
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const savedForms = useStoreSelector((state) => state.builder.loadSchems);
     const dispatch = useStoreDispatch();
     const formInstance = useRef<null | Webform>(null);
@@ -22,9 +26,11 @@ export default function ShowForm() {
         const form = savedForms.find((form) => form.name === name);
         if (form) {
             setLoadSchema(form);
-            alert("Форма загружена!");
+            setTypeAlert("success");
+            setTextAlert("Форма загружена!");
         } else {
-            alert("Форма не найдена.");
+            setTypeAlert("error");
+            setTextAlert("Форма не найдена.");
         }
     };
 
@@ -32,39 +38,47 @@ export default function ShowForm() {
         formInstance.current = instance;
     };
 
-    const handleButtonClick = () => {
+    const handleButtonClick = async () => {
         if (!formInstance.current) {
-            console.log("Наша форма еще не готова.");
+            console.log("Форма еще не готова.");
             return;
         }
 
-        const formData = formInstance.current.getValue(); // Получаем значения формы
-        console.log("Данные формы:", formData);
-    };
+        // Получаем данные формы перед проверкой валидности
+        const formData = formInstance.current.getValue();
+        console.log(formData);
 
-    const handleEvent = (event: any) => {
-        console.log(event);
-        if (event.type === "button" && event.component.key === "myButtonKey") {
-            // Замените myButtonKey на ключ вашей кнопки
-            handleButtonClick();
+        // Проверяем валидность формы
+        const isValid = formInstance.current.validate(
+            formData, // Данные формы
+        );
+        console.log(isValid);
+        if (isValid.length === 0) {
+            // console.log("Данные формы:", formData);
+
+            // Выполните отправку данных на сервер
+            dispatch(
+                addValue({
+                    data: { ...formData.data }, // Измените это в зависимости от структуры данных
+                    name: nameForm,
+                }),
+            );
+
+            setTypeAlert("success");
+            setTextAlert("Форма успешно отправлена!");
+        } else {
+            setTypeAlert("error");
+            setTextAlert("Ошибка валидации. Пожалуйста, проверьте форму.");
+            formInstance.current.showErrors(
+                formInstance.current.errors, // Ошибки формы
+                formData, // Передаем текущие данные формы
+            );
         }
     };
 
     useEffect(() => {
         dispatch(getAllForms());
     }, [dispatch]);
-
-    const handleEventSaveValue = () => {
-        console.log(formInstance.current);
-        if (formInstance.current) {
-            dispatch(
-                addValue({
-                    data: { ...formInstance.current?.getValue().data },
-                    name: nameForm,
-                }),
-            );
-        }
-    };
 
     return (
         <div className="p-4">
@@ -87,19 +101,21 @@ export default function ShowForm() {
                 </FormBootStrap.Select>
             </div>
             <div className="mt-3 flex justify-end mr-10">
-                <Button onClick={handleEventSaveValue}>
-                    Сохранить значения
+                <Button onClick={handleButtonClick} disabled={isButtonDisabled}>
+                    {isButtonDisabled ? "Подождите..." : "Сохранить значения"}
                 </Button>
             </div>
             <div>
                 {loadSchema && (
-                    <Form
-                        src={loadSchema}
-                        onFormReady={handleFormReady}
-                        onSubmitDone={handleEvent} // Обработчик событий // Можно создать кнопку для сохранения значений, а не создавать ее в форм буилдере, тогда через нее будет универсальный url, который все значения форм принимает и потом будет отображать
-                    />
+                    <Form src={loadSchema} onFormReady={handleFormReady} />
                 )}
             </div>
+            <CustomAlert
+                onClose={() => setTextAlert("")}
+                isVisible={textAlert !== ""}
+                message={textAlert}
+                type={typeAlert}
+            />
         </div>
     );
 }

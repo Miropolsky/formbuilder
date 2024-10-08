@@ -7,11 +7,12 @@ export type LanguagesType = (typeof languages)[number];
 export function isLanguage(language: string): language is LanguagesType {
     return languages.includes(language as LanguagesType);
 }
-
+export type TypeCustomAlert = "error" | "success" | "info";
 export function formOptions(lang: LanguagesType) {
     return {
         language: lang,
         noNewEdit: true,
+        alwaysConfirmComponentRemoval: true,
         editForm: {
             button: [
                 {
@@ -481,13 +482,26 @@ export function formOptions(lang: LanguagesType) {
                             key: "checkbox",
                         },
                     },
-                    button: {
+                    // button: {
+                    //     title: translations[lang]["Button"] || "Button",
+                    //     icon: "stop",
+                    //     schema: {
+                    //         label: translations[lang]["Button"] || "Button",
+                    //         type: "button",
+                    //         key: "button",
+                    //     },
+                    // },
+                    custombutton: {
                         title: translations[lang]["Button"] || "Button",
+                        key: "button",
                         icon: "stop",
                         schema: {
-                            label: translations[lang]["Button"] || "Button",
+                            label: translations[lang]["Submit"] || "Submit",
+                            action: "url", // Действие по умолчанию — отправка на URL
+                            url: "http://localhost:5000/saveData", // URL по умолчанию
                             type: "button",
-                            key: "button",
+                            key: "submit",
+                            input: true,
                         },
                     },
                     password: false,
