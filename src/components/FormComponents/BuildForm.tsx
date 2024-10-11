@@ -1,4 +1,4 @@
-import { FormBuilder, FormType } from "@formio/react";
+import { Components, FormBuilder, FormType } from "@formio/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreDispatch, useStoreSelector } from "../../redux/store";
 import {
@@ -19,6 +19,11 @@ import { Button, Form } from "react-bootstrap";
 import { saveAs } from "file-saver";
 import CustomModal from "../HelpersForm/CustomModal";
 import { CustomAlert } from "../HelpersForm/CustomAlert";
+import { ImageComponent } from "./ImageComponent";
+import { CustomWidget } from "./CustomWidget";
+
+Components.addComponent("customimage", ImageComponent);
+Components.addComponent("customwidget", CustomWidget);
 
 export default function BuildForm() {
     const [textAlert, setTextAlert] = useState("");

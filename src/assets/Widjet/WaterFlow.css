@@ -1,0 +1,30 @@
+.svg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.arrows .arrow {
+  animation: move-arrow 2s linear infinite, opacity-arrow 2s linear infinite;
+  opacity: 0;
+}
+
+@keyframes move-arrow {
+  0% {
+    transform: translateX(-60px);
+  }
+  100% {
+    transform: translateX(600px);
+  }
+}
+@keyframes opacity-arrow {
+  0% {
+    display: none;
+    opacity: 1;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}

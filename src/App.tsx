@@ -5,6 +5,7 @@ import BuilderPage from "./pages/BuilderPage";
 import ShowForm from "./pages/ShowForm";
 import ErrorPage from "./pages/ErrorPage";
 import ValueSaveForm from "./pages/ValueSaveForm";
+import TestPage from "./pages/TestPage";
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
     {
         path: "/valueSaveForm",
         element: <ValueSaveForm />,
+    },
+    {
+        path: "/testPage",
+        element: <TestPage />,
     },
     {
         path: "*",

@@ -29,6 +29,12 @@ const Header = () => {
                             >
                                 Отображение результатов форм
                             </Nav.Link>
+                            <Nav.Link
+                                href="/testPage"
+                                className="text-white"
+                            >
+                                Тестовая страница
+                            </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
