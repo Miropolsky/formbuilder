@@ -22,8 +22,8 @@ import { CustomAlert } from "../HelpersForm/CustomAlert";
 import { ImageComponent } from "./ImageComponent";
 import { CustomWidget } from "./CustomWidget";
 
-Components.addComponent("customimage", ImageComponent);
 Components.addComponent("customwidget", CustomWidget);
+Components.addComponent("customimage", ImageComponent);
 
 export default function BuildForm() {
     const [textAlert, setTextAlert] = useState("");

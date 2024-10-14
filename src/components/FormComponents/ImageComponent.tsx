@@ -1,5 +1,4 @@
 import { Components } from "@formio/react";
-
 // Определяем типы для нашего компонента
 interface CustomImageSchema extends Components.components.textfield.schema {
     imageSrc: string;
@@ -58,10 +57,10 @@ export class ImageComponent extends Components.components.textfield {
             rounding = "0px",
         } = this.component;
         return `
-            <div class="custom-image" style="display: flex; ${positionToFlex(position)}; margin: ${margin}; padding: ${padding}">
-                <img src="${imageSrc}" alt="${alt}" style="max-width: ${width}; height: ${height}; border-radius: ${rounding}" />
-            </div>
-        `;
+        <div class="custom-image" style="display: flex; ${positionToFlex(position)}; margin: ${margin}; padding: ${padding}">
+            <img src="${imageSrc}" alt="${alt}" style="max-width: ${width}; height: ${height}; border-radius: ${rounding}" />
+        </div>
+    `;
     }
 
     // Метод attach для привязки событий
@@ -78,7 +77,7 @@ export class ImageComponent extends Components.components.textfield {
         }
 
         // Обработчик изменения файла (Blob)
-        const fileInput = element.querySelector("#fileInput");
+        const fileInput = element.querySelector("input[name='fileImg']");
         if (fileInput) {
             fileInput.addEventListener("change", (event: any) => {
                 const file = event.target.files[0];
@@ -96,6 +95,92 @@ export class ImageComponent extends Components.components.textfield {
                 }
             });
         }
+    }
+    static editForm() {
+        return {
+            components: [
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "imageSrc",
+                    label: "Image URL",
+                    placeholder: "Enter image URL",
+                    weight: 0, // Порядок отображения
+                },
+                {
+                    type: "file",
+                    input: true,
+                    key: "fileImg",
+                    label: "Upload Image",
+                    weight: 10, // Порядок отображения
+                    // customConditional: "show = true;", // Настройка для отображения только в настройках
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "width",
+                    label: "Image Width",
+                    placeholder: "Enter width (e.g., 100%, 300px)",
+                    weight: 20, // Порядок отображения
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "height",
+                    label: "Image Height",
+                    placeholder: "Enter height (e.g., auto, 200px)",
+                    weight: 30,
+                },
+                {
+                    type: "select",
+                    input: true,
+                    key: "position",
+                    label: "Position Image",
+                    dataSrc: "values",
+                    data: {
+                        values: [
+                            { value: "Left", label: "Left" },
+                            { value: "Center", label: "Center" },
+                            { value: "Right", label: "Right" },
+                        ],
+                    },
+                    defaultValue: "Left",
+                    weight: 40,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "alt",
+                    label: "Alt attribute",
+                    placeholder: "Custom Image",
+                    weight: 50,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "margin",
+                    label: "External indentation(margin)",
+                    placeholder: "0px 0px 0px 0px",
+                    weight: 60,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "padding",
+                    label: "Internal indentation(padding)",
+                    placeholder: "0px 0px 0px 0px",
+                    weight: 70,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "rounding",
+                    label: "Rounding",
+                    placeholder: "Enter rounding(10%, 12px)",
+                    weight: 80,
+                },
+            ],
+        };
     }
 }
 

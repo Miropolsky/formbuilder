@@ -145,6 +145,50 @@ app.get('/getData', async (req, res) => {
   }
 });
 
+// Маршрут для добавления нового изображения
+app.post('/addImage', async (req, res) => {
+  const { imageBase64 } = req.body; // Принимаем изображение в формате base64
+  const newImage = {
+    id: uuidv4(),
+    image: imageBase64,
+  };
+
+  try {
+    const data = await readFileAsync('./server/imgs.json', 'utf8');
+    let images = JSON.parse(data);
+
+    images.push(newImage); // Добавляем новое изображение в массив
+
+    await writeFileAsync('./server/imgs.json', JSON.stringify(images), 'utf8');
+    res.status(201).send({ id: newImage.id, message: 'Изображение сохранено' });
+  } catch (err) {
+    console.error('Ошибка при записи файла:', err);
+    res.status(500).send('Ошибка при записи файла');
+  }
+});
+
+// Маршрут для получения изображения по ID
+app.get('/getImage/:id', async (req, res) => {
+  const imageId = req.params.id;
+
+  try {
+    const data = await readFileAsync('./server/imgs.json', 'utf8');
+    const images = JSON.parse(data);
+
+    const image = images.find((img) => img.id === imageId);
+
+    if (!image) {
+      return res.status(404).send('Изображение не найдено');
+    }
+
+    res.status(200).json({ image: image.image });
+  } catch (err) {
+    console.error('Ошибка при чтении файла:', err);
+    res.status(500).send('Ошибка при чтении файла');
+  }
+});
+
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
