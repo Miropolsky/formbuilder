@@ -1,11 +1,25 @@
-import React from "react";
 import { createRoot } from "react-dom/client"; // Импортируем createRoot
 import { Components } from "@formio/react";
 import Ventilator from "../../assets/Widjet/Ventilator";
+import WaterFlow from "../../assets/Widjet/WaterFlow";
+import WaterTank from "../../assets/Widjet/WaterTank";
+import { positionToFlex } from "../../utils/utils";
+
+// Описание схемы для нашего компонента
+interface CustomWidgetSchema {
+    label: string;
+    type: string;
+    key: string;
+    input: boolean;
+    selectedComponent: string;
+    props: CustomWidgetProps;
+}
 
 // Описание типов для пропсов
 interface CustomWidgetProps {
     customProp?: string;
+    waterLevel?: number; // Проп для WaterTank
+    isActive?: boolean; // Проп для WaterFlow и Ventilator
 }
 
 // Описание схемы для нашего компонента
@@ -21,12 +35,16 @@ interface CustomWidgetSchema {
 export class CustomWidget extends Components.components.textfield {
     static schema(...extend: Partial<CustomWidgetSchema>[]) {
         return Components.components.textfield.schema({
-            label: "Custom Widget",
+            label: "",
             type: "customwidget",
             key: "customWidget",
             input: true,
             selectedComponent: "Ventilator", // Компонент по умолчанию
-            props: {}, // Пропсы для выбранного компонента
+            props: {
+                isActive: false, // Дефолтные значения
+                waterLevel: 50, // Дефолтные значения
+                selectedComponent: "Ventilator",
+            },
             ...extend,
         });
     }
@@ -41,30 +59,69 @@ export class CustomWidget extends Components.components.textfield {
         };
     }
 
-    renderElement(value: any): string {
-        const containerId = `ventilator-container-${this.component.key}`;
+    renderElement(): string {
+        // const { isActive, waterLevel } = this.component;
+        const {
+            width = "100%",
+            height = "auto",
+            position = "Left",
+            padding = "0px 0px 0px 0px",
+            margin = "0px 0px 0px 0px",
+        } = this.component;
+        const containerId = `widget-container-${this.component.key}`;
+
         return `
-        <div class="custom-widget">
-            <div id="${containerId}"></div>
+        <div class="custom-widget" style="display: flex; ${positionToFlex(position)}; margin: ${margin}; padding: ${padding}">
+            <div id="${containerId}" style="max-width: ${width}; height: ${height}"></div>
         </div>
         `;
     }
 
     attach(element: HTMLElement) {
         super.attach(element);
-        this.renderVentilator(element); // Вызываем метод для отрисовки компонента
+        this.renderComponent(element); // Вызываем метод для отрисовки компонента
+        // this.redraw();
     }
 
-    renderVentilator(element: HTMLElement) {
-        const containerId = `ventilator-container-${this.component.key}`; // Уникальный ID для контейнера
+    renderComponent(element: HTMLElement) {
+        const containerId = `widget-container-${this.component.key}`;
         const container = element.querySelector(`#${containerId}`);
 
         if (container) {
             const root = createRoot(container); // Создаем корень для рендеринга
-            root.render(<Ventilator isActive={true} />); // Отрисовка компонента Ventilator
+            const { selectedComponent, props, isActive, waterLevel } =
+                this.component;
+            this.component.props = {
+                ...this.component.props,
+                isActive,
+                waterLevel,
+            };
+
+            const customProps = { isActive, waterLevel };
+            // Логируем, чтобы убедиться, что пропсы передаются корректно
+            console.log("Selected component:", selectedComponent);
+            console.log("Props to pass:", props);
+            console.log("isActive:", isActive);
+            console.log("waterLevel:", waterLevel);
+
+            // Определяем, какой компонент рендерить
+            let ComponentToRender;
+            switch (selectedComponent) {
+                case "WaterFlow":
+                    ComponentToRender = WaterFlow;
+                    break;
+                case "WaterTank":
+                    ComponentToRender = WaterTank;
+                    break;
+                case "Ventilator":
+                default:
+                    ComponentToRender = Ventilator;
+                    break;
+            }
+
+            root.render(<ComponentToRender {...customProps} />); // Отрисовка с пропсами
         }
     }
-
     static editForm() {
         return {
             components: [
@@ -77,19 +134,90 @@ export class CustomWidget extends Components.components.textfield {
                     data: {
                         values: [
                             { label: "Ventilator", value: "Ventilator" },
-                            // Добавьте другие компоненты здесь
+                            { label: "WaterFlow", value: "WaterFlow" },
+                            { label: "WaterTank", value: "WaterTank" },
                         ],
                     },
                     defaultValue: "Ventilator",
                     weight: 0,
+                    onChange: (event: any) => {
+                        const selectedComponent = event.target.value;
+                        this.component.selectedComponent = selectedComponent;
+                        this.renderComponent(this.element);
+                    },
+                },
+                {
+                    type: "checkbox",
+                    input: true,
+                    key: "isActive",
+                    label: "Активировать анимацию",
+                    weight: 20,
+                    onChange: (event: any) => {
+                        const isActive = event.target.checked;
+                        this.component.isActive = isActive;
+                        this.renderComponent(this.element); // Перерисовка компонента
+                    },
+                },
+                {
+                    type: "number",
+                    input: true,
+                    key: "waterLevel",
+                    label: "Уровень воды (для WaterTank)",
+                    placeholder: "Введите уровень воды от 0 до 100",
+                    weight: 30,
+                    onChange: (event: any) => {
+                        const waterLevel = Number(event.target.value); // Преобразуем в число
+                        this.component.waterLevel = waterLevel; // Обновляем пропс
+                        this.renderComponent(this.element); // Перерисовка компонента
+                    },
                 },
                 {
                     type: "textfield",
                     input: true,
-                    key: "customProp",
-                    label: "Пользовательское свойство",
-                    placeholder: "Введите значение пользовательского свойства",
-                    weight: 10,
+                    key: "width",
+                    label: "Width",
+                    placeholder: "Enter width (e.g., 100%, 300px)",
+                    weight: 40, // Порядок отображения
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "height",
+                    label: "Height",
+                    placeholder: "Enter height (e.g., auto, 200px)",
+                    weight: 50,
+                },
+                {
+                    type: "select",
+                    input: true,
+                    key: "position",
+                    label: "Position",
+                    dataSrc: "values",
+                    data: {
+                        values: [
+                            { value: "Left", label: "Left" },
+                            { value: "Center", label: "Center" },
+                            { value: "Right", label: "Right" },
+                        ],
+                    },
+                    defaultValue: "Left",
+                    weight: 60,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "margin",
+                    label: "External indentation(margin)",
+                    placeholder: "0px 0px 0px 0px",
+                    weight: 70,
+                },
+                {
+                    type: "textfield",
+                    input: true,
+                    key: "padding",
+                    label: "Internal indentation(padding)",
+                    placeholder: "0px 0px 0px 0px",
+                    weight: 80,
                 },
             ],
         };

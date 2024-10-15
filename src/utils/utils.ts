@@ -739,3 +739,16 @@ export interface LoadValues {
     data: Record<string, any>;
     metadata?: Record<string, any>;
 }
+
+export const positionToFlex = (position: "Left" | "Right" | "Center") => {
+    switch (position) {
+        case "Left":
+            return `justify-content: start`;
+        case "Right":
+            return `justify-content: end`;
+        case "Center":
+            return `justify-content: center`;
+        default:
+            return `justify-content: start`; // Значение по умолчанию
+    }
+};

@@ -1,22 +1,10 @@
 import { Components } from "@formio/react";
+import { positionToFlex } from "../../utils/utils";
 // Определяем типы для нашего компонента
 interface CustomImageSchema extends Components.components.textfield.schema {
     imageSrc: string;
     fileBlob: Blob | null;
 }
-
-const positionToFlex = (position: "Left" | "Right" | "Center") => {
-    switch (position) {
-        case "Left":
-            return `justify-content: start`;
-        case "Right":
-            return `justify-content: end`;
-        case "Center":
-            return `justify-content: center`;
-        default:
-            return `justify-content: start`; // Значение по умолчанию
-    }
-};
 
 // Создаем новый компонент с использованием TypeScript
 export class ImageComponent extends Components.components.textfield {
@@ -45,7 +33,7 @@ export class ImageComponent extends Components.components.textfield {
     }
 
     // Рендерим HTML для кастомного компонента
-    renderElement(value: any): string {
+    renderElement(): string {
         const {
             imageSrc,
             width = "100%",
