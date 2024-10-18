@@ -2,6 +2,14 @@ import { useState } from "react";
 import Ventilator from "../assets/Widjet/Ventilator";
 import WaterTank from "../assets/Widjet/WaterTank";
 import WaterFlow from "../assets/Widjet/WaterFlow";
+import { CustomChartLineBar } from "../assets/Charts/CustomChartLineBar";
+import { Chart, Line } from "react-chartjs-2";
+import { CustomBar } from "../assets/Charts/CustomBar";
+import CustomLine from "../assets/Charts/CustomLine";
+import { CustomBarStacked } from "../assets/Charts/CustomBarStacked";
+import { CustomDoughunt } from "../assets/Charts/CustomDoughunt";
+import { CustomLineArea } from "../assets/Charts/CustomLineArea";
+import { CustomLineAxis } from "../assets/Charts/CustomLineAxis";
 console.log(TestPage.prototype);
 export default function TestPage() {
     const [waterLevel, setWaterLevel] = useState(50);
@@ -28,6 +36,24 @@ export default function TestPage() {
             </div>
             <div>
                 <WaterFlow isActive={true} />
+            </div>
+            <div className="w-[600px]">
+                <CustomLine />
+            </div>
+            <div className="w-[900px]">
+                <CustomBar />
+            </div>
+            <div className="w-[900px]">
+                <CustomBarStacked />
+            </div>
+            <div className="w-[900px]">
+                <CustomDoughunt />
+            </div>
+            <div className="w-[900px]">
+                <CustomLineArea />
+            </div>
+            <div className="w-[900px]">
+                <CustomLineAxis />
             </div>
         </div>
     );

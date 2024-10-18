@@ -2,6 +2,7 @@ import { FormType } from "@formio/react";
 import { translations } from "./constans";
 import { ImageComponent } from "../components/FormComponents/ImageComponent";
 import { CustomWidget } from "../components/FormComponents/CustomWidget";
+import { ChartArea } from "chart.js";
 
 const languages = ["en", "ru"] as const;
 
@@ -752,3 +753,33 @@ export const positionToFlex = (position: "Left" | "Right" | "Center") => {
             return `justify-content: start`; // Значение по умолчанию
     }
 };
+
+export function randomColors() {
+    return (
+        "#" + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6)
+    );
+}
+
+export function createGradient(
+    ctx: CanvasRenderingContext2D,
+    area: ChartArea,
+    borderColor: any,
+) {
+    const colorStart = borderColor;
+    const colorEnd = borderColor;
+
+    const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
+
+    gradient.addColorStop(0, "transparent");
+    // gradient.addColorStop(0.18, colorMid);
+    gradient.addColorStop(0.75, colorStart);
+    // gradient.addColorStop(0.42, `${borderColor}28`);
+    // gradient.addColorStop(0.55, colorMid);
+    gradient.addColorStop(1, colorEnd);
+
+    return gradient;
+}
+
+export function randomNumber(min:number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
