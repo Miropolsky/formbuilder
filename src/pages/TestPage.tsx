@@ -2,8 +2,6 @@ import { useState } from "react";
 import Ventilator from "../assets/Widjet/Ventilator";
 import WaterTank from "../assets/Widjet/WaterTank";
 import WaterFlow from "../assets/Widjet/WaterFlow";
-import { CustomChartLineBar } from "../assets/Charts/CustomChartLineBar";
-import { Chart, Line } from "react-chartjs-2";
 import { CustomBar } from "../assets/Charts/CustomBar";
 import CustomLine from "../assets/Charts/CustomLine";
 import { CustomBarStacked } from "../assets/Charts/CustomBarStacked";
@@ -38,7 +36,7 @@ export default function TestPage() {
                 <WaterFlow isActive={true} />
             </div>
             <div className="w-[600px]">
-                <CustomLine />
+                <CustomLine titleChart="Line Chart" titleOsX="x" titleOsY="y" />
             </div>
             <div className="w-[900px]">
                 <CustomBar />

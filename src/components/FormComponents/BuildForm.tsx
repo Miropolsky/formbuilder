@@ -21,9 +21,11 @@ import CustomModal from "../HelpersForm/CustomModal";
 import { CustomAlert } from "../HelpersForm/CustomAlert";
 import { ImageComponent } from "./ImageComponent";
 import { CustomWidget } from "./CustomWidget";
+import { CustomChart } from "./CustomChart";
 
 Components.addComponent("customwidget", CustomWidget);
 Components.addComponent("customimage", ImageComponent);
+Components.addComponent("customchart", CustomChart);
 
 export default function BuildForm() {
     const [textAlert, setTextAlert] = useState("");
