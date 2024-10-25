@@ -11,6 +11,10 @@ import {
     Legend,
     ChartOptions,
     ChartData,
+    Scriptable,
+    EasingFunction,
+    ScriptableContext,
+    ChartType,
 } from "chart.js";
 
 // Регистрация компонентов для Chart.js
@@ -36,8 +40,28 @@ interface LineChartProps {
     isXTitleDisplay?: boolean;
     isYTitleDisplay?: boolean;
     isYBeginAtZero?: boolean;
+
+    // Дополнительные параметры
+    showPoints?: boolean;
+    pointRadius?: number;
+    pointBackgroundColor?: string;
+    showXGrid?: boolean;
+    showYGrid?: boolean;
+    gridColor?: string;
+    tension?: number;
+    animationDuration?: number;
+    animationEasing?: Scriptable<EasingFunction, ScriptableContext<ChartType>>;
+    showTooltips?: boolean;
+    tooltipBackgroundColor?: string;
+    tooltipMode?: "nearest" | "index" | "dataset" | "point";
+    lineWidth?: number;
+    borderDash?: [number, number];
+    axisColor?: string;
+    labelColor?: string;
+    yAxisFormat?: (value: number) => string;
 }
 
+// Интерфейс для каждого набора данных (datasets)
 interface IDataSet {
     label: string;
     data: number[];
@@ -47,6 +71,7 @@ interface IDataSet {
 }
 
 const CustomLine: React.FC<LineChartProps> = ({
+    // Основные параметры
     titleChart = "Sample Line Chart",
     titleOsX = "X Axis",
     titleOsY = "Y Axis",
@@ -72,6 +97,19 @@ const CustomLine: React.FC<LineChartProps> = ({
     isXTitleDisplay = true,
     isYTitleDisplay = true,
     isYBeginAtZero = true,
+
+    // Дополнительные параметры
+    showPoints = true,
+    pointRadius = 3,
+    showXGrid = true,
+    showYGrid = true,
+    gridColor = "rgba(0, 0, 0, 0.1)",
+    tension = 0.4,
+    showTooltips = true,
+    tooltipMode = "nearest",
+    lineWidth = 2,
+    borderDash = [0, 0], // Сплошная линия
+    labelColor = "rgba(0, 0, 0, 0.7)",
 }) => {
     // Данные для графика
     const data: ChartData<"line"> = {
@@ -90,20 +128,48 @@ const CustomLine: React.FC<LineChartProps> = ({
                 display: isShowTitle,
                 text: titleChart,
             },
+            tooltip: {
+                enabled: showTooltips,
+                mode: tooltipMode,
+            },
+        },
+        elements: {
+            point: {
+                radius: showPoints ? pointRadius : 0, // Показывать или скрывать точки
+            },
+            line: {
+                tension: tension, // Управляем натяжением линии
+                borderWidth: lineWidth, // Толщина линии
+                borderDash: borderDash, // Стиль линии (пунктир или сплошная)
+            },
         },
         scales: {
             x: {
+                grid: {
+                    display: showXGrid,
+                    color: gridColor,
+                },
                 title: {
                     display: isXTitleDisplay,
                     text: titleOsX,
                 },
+                ticks: {
+                    color: labelColor,
+                },
             },
             y: {
+                grid: {
+                    display: showYGrid,
+                    color: gridColor,
+                },
                 title: {
                     display: isYTitleDisplay,
                     text: titleOsY,
                 },
                 beginAtZero: isYBeginAtZero,
+                ticks: {
+                    color: labelColor,
+                },
             },
         },
     };

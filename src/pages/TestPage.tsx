@@ -8,6 +8,7 @@ import { CustomBarStacked } from "../assets/Charts/CustomBarStacked";
 import { CustomDoughunt } from "../assets/Charts/CustomDoughunt";
 import { CustomLineArea } from "../assets/Charts/CustomLineArea";
 import { CustomLineAxis } from "../assets/Charts/CustomLineAxis";
+import CustomColorSelect from "../assets/Widjet/CustomColorSelect";
 console.log(TestPage.prototype);
 export default function TestPage() {
     const [waterLevel, setWaterLevel] = useState(50);
@@ -52,6 +53,9 @@ export default function TestPage() {
             </div>
             <div className="w-[900px]">
                 <CustomLineAxis />
+            </div>
+            <div>
+                <CustomColorSelect />
             </div>
         </div>
     );

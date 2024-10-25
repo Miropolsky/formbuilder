@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  height: 45px;
+  width: 45px;
+  background-color: #666c74;
+  border-radius: 10%;
+  border: 1px solid black;
+  align-items: center;
+  justify-content: center;
+  .customInput {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 25px;
+    height: 28px;
+    border: none;
+    cursor: pointer;
+    &::-webkit-color-swatch {
+      border-radius: 50%;
+      border: 1px solid black;
+    }
+    &::-webkit-color-swatch-wrapper {
+      border-radius: 50%;
+    }
+    &::-moz-color-swatch {
+      border-radius: 50%;
+    }
+  }
+}

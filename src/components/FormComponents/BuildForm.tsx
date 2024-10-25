@@ -42,12 +42,6 @@ export default function BuildForm() {
 
     const onFormChange = useCallback((newSchema: FormType) => {
         if (typeof newSchema === "object" && newSchema !== null) {
-            // schemaRef.current = {
-            //     ...newSchema,
-            //     id: globalSchema ? globalSchema.id : "",
-            //     name: globalSchema ? globalSchema.name : nameSchema,
-            // };
-            // console.log(newSchema);
             dispatch(
                 setSchema({
                     ...newSchema,
