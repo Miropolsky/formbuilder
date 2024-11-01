@@ -89,8 +89,7 @@ export class CustomWidget extends Components.components.textfield {
 
         if (container) {
             const root = createRoot(container); // Создаем корень для рендеринга
-            const { selectedComponent, props, isActive, waterLevel } =
-                this.component;
+            const { selectedComponent, isActive, waterLevel } = this.component;
             this.component.props = {
                 ...this.component.props,
                 isActive,
@@ -98,11 +97,6 @@ export class CustomWidget extends Components.components.textfield {
             };
 
             const customProps = { isActive, waterLevel };
-            // Логируем, чтобы убедиться, что пропсы передаются корректно
-            console.log("Selected component:", selectedComponent);
-            console.log("Props to pass:", props);
-            console.log("isActive:", isActive);
-            console.log("waterLevel:", waterLevel);
 
             // Определяем, какой компонент рендерить
             let ComponentToRender;
@@ -140,11 +134,6 @@ export class CustomWidget extends Components.components.textfield {
                     },
                     defaultValue: "Ventilator",
                     weight: 0,
-                    onChange: (event: any) => {
-                        const selectedComponent = event.target.value;
-                        this.component.selectedComponent = selectedComponent;
-                        this.renderComponent(this.element);
-                    },
                 },
                 {
                     type: "checkbox",
@@ -152,10 +141,23 @@ export class CustomWidget extends Components.components.textfield {
                     key: "isActive",
                     label: "Активировать анимацию",
                     weight: 20,
-                    onChange: (event: any) => {
-                        const isActive = event.target.checked;
-                        this.component.isActive = isActive;
-                        this.renderComponent(this.element); // Перерисовка компонента
+                    conditional: {
+                        json: {
+                            or: [
+                                {
+                                    "===": [
+                                        { var: "data.selectedComponent" },
+                                        "Ventilator",
+                                    ],
+                                },
+                                {
+                                    "===": [
+                                        { var: "data.selectedComponent" },
+                                        "WaterFlow",
+                                    ],
+                                },
+                            ],
+                        },
                     },
                 },
                 {
@@ -165,10 +167,13 @@ export class CustomWidget extends Components.components.textfield {
                     label: "Уровень воды (для WaterTank)",
                     placeholder: "Введите уровень воды от 0 до 100",
                     weight: 30,
-                    onChange: (event: any) => {
-                        const waterLevel = Number(event.target.value); // Преобразуем в число
-                        this.component.waterLevel = waterLevel; // Обновляем пропс
-                        this.renderComponent(this.element); // Перерисовка компонента
+                    conditional: {
+                        json: {
+                            "===": [
+                                { var: "data.selectedComponent" },
+                                "WaterTank",
+                            ],
+                        },
                     },
                 },
                 {
@@ -177,7 +182,7 @@ export class CustomWidget extends Components.components.textfield {
                     key: "width",
                     label: "Width",
                     placeholder: "Enter width (e.g., 100%, 300px)",
-                    weight: 40, // Порядок отображения
+                    weight: 40,
                 },
                 {
                     type: "textfield",

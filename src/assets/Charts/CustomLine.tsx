@@ -30,6 +30,8 @@ ChartJS.register(
 
 // Интерфейс для данных графика
 interface LineChartProps {
+    height?: string;
+    width?: string;
     titleChart?: string;
     titleOsX?: string;
     titleOsY?: string;
@@ -72,6 +74,8 @@ interface IDataSet {
 
 const CustomLine: React.FC<LineChartProps> = ({
     // Основные параметры
+    height = "300px",
+    width = "600px",
     titleChart = "Sample Line Chart",
     titleOsX = "X Axis",
     titleOsY = "Y Axis",
@@ -174,11 +178,7 @@ const CustomLine: React.FC<LineChartProps> = ({
         },
     };
 
-    return (
-        <div style={{ width: "600px", height: "400px" }}>
-            <Line data={data} options={options} />
-        </div>
-    );
+    return <Line width={width} height={height} data={data} options={options} />;
 };
 
 export default CustomLine;

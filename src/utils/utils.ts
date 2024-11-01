@@ -441,6 +441,10 @@ export function formOptions(lang: LanguagesType) {
                 default: true,
                 title: translations[lang]["Basic Elements"] || "Basic Elements",
                 components: {
+                    customColorSelect: {
+                        display: false,
+                        ignore: true,
+                    },
                     textfield: {
                         title: translations[lang]["Text Field"] || "Text Field",
                         key: "textfield",

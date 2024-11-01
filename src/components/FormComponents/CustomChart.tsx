@@ -1,13 +1,13 @@
 import { createRoot } from "react-dom/client"; // Импортируем createRoot
 import { Components } from "@formio/react";
 import { positionToFlex, strToArray } from "../../utils/utils";
-import { CustomBar } from "../../assets/Charts/CustomBar";
 import { CustomBarStacked } from "../../assets/Charts/CustomBarStacked";
 import { CustomDoughunt } from "../../assets/Charts/CustomDoughunt";
 import CustomLine from "../../assets/Charts/CustomLine";
 import { CustomLineAxis } from "../../assets/Charts/CustomLineAxis";
 import { CustomLineArea } from "../../assets/Charts/CustomLineArea";
-import CustomColorSelect from "../../assets/Widjet/CustomColorSelect";
+import CustomBar from "../../assets/Charts/CustomBar";
+
 // Описание схемы для нашего компонента
 interface CustomWidgetSchema {
     label: string;
@@ -44,11 +44,6 @@ export class CustomChart extends Components.components.textfield {
             key: "customChart",
             input: true,
             selectedComponent: "CustomLine", // Компонент по умолчанию
-            props: {
-                selectedComponent: "CustomLine",
-                chartData: [10, 20, 30, 25, 15], // Данные по умолчанию
-                labelsX: [0, 1, 2, 3, 4], // Метки оси X по умолчанию
-            },
             ...extend,
         });
     }
@@ -83,6 +78,8 @@ export class CustomChart extends Components.components.textfield {
     attach(element: HTMLElement) {
         super.attach(element);
         this.renderComponent(element); // Вызываем метод для отрисовки компонента
+        // this.renderElement();
+        // this.redraw();
     }
 
     renderComponent(element: HTMLElement) {
@@ -92,9 +89,6 @@ export class CustomChart extends Components.components.textfield {
         if (container) {
             const root = createRoot(container); // Создаем корень для рендеринга
             // const { selectedComponent, props } = this.component;
-            this.component.props = {
-                ...this.component.props,
-            };
             const {
                 props,
                 selectedComponent,
@@ -266,13 +260,6 @@ export class CustomChart extends Components.components.textfield {
                                     },
                                     defaultValue: "CustomLine",
                                     weight: 0,
-                                    onChange: (event: any) => {
-                                        const selectedComponent =
-                                            event.target.value;
-                                        this.component.selectedComponent =
-                                            selectedComponent;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "checkbox",
@@ -281,12 +268,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Show Chart Title",
                                     defaultValue: true,
                                     weight: 20,
-                                    onChange: (event: any) => {
-                                        console.log(event.target.checked);
-                                        this.component.showTitle =
-                                            event.target.checked;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "checkbox",
@@ -295,11 +276,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Display X Axis Title",
                                     defaultValue: true,
                                     weight: 30,
-                                    onChange: (event: any) => {
-                                        this.component.xTitleDisplay =
-                                            event.target.checked;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "checkbox",
@@ -308,11 +284,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Display Y Axis Title",
                                     defaultValue: true,
                                     weight: 40,
-                                    onChange: (event: any) => {
-                                        this.component.yTitleDisplay =
-                                            event.target.checked;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "checkbox",
@@ -321,11 +292,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Y Axis Begins at Zero",
                                     defaultValue: true,
                                     weight: 50,
-                                    onChange: (event: any) => {
-                                        this.component.yBeginAtZero =
-                                            event.target.checked;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "textfield",
@@ -338,13 +304,6 @@ export class CustomChart extends Components.components.textfield {
                                     defaultValue: "[0, 1, 2, 3, 4]",
                                     validate: {
                                         required: true,
-                                    },
-                                    onChange: (event: any) => {
-                                        const labelsX = JSON.parse(
-                                            event.target.value,
-                                        );
-                                        this.component.labelsX = labelsX;
-                                        this.renderComponent(this.element);
                                     },
                                 },
                                 {
@@ -370,11 +329,6 @@ export class CustomChart extends Components.components.textfield {
                                     },
                                     defaultValue: "bottom",
                                     weight: 50,
-                                    onChange: (event: any) => {
-                                        this.component.legendPosition =
-                                            event.target.value;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "textfield",
@@ -383,11 +337,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Chart Title",
                                     placeholder: "Enter chart title",
                                     weight: 20,
-                                    onChange: (event: any) => {
-                                        this.component.titleChart =
-                                            event.target.value;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "textfield",
@@ -396,11 +345,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "X Axis Title",
                                     placeholder: "Enter X Axis title",
                                     weight: 30,
-                                    onChange: (event: any) => {
-                                        this.component.titleOsX =
-                                            event.target.value;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "textfield",
@@ -409,11 +353,6 @@ export class CustomChart extends Components.components.textfield {
                                     label: "Y Axis Title",
                                     placeholder: "Enter Y Axis title",
                                     weight: 40,
-                                    onChange: (event: any) => {
-                                        this.component.titleOsY =
-                                            event.target.value;
-                                        this.renderComponent(this.element);
-                                    },
                                 },
                                 {
                                     type: "checkbox",
@@ -432,7 +371,7 @@ export class CustomChart extends Components.components.textfield {
                                     weight: 30,
                                 },
                                 {
-                                    type: "textfield",
+                                    type: "customColorSelect",
                                     input: true,
                                     key: "pointBackgroundColor",
                                     label: "Point Background Color",
@@ -456,12 +395,12 @@ export class CustomChart extends Components.components.textfield {
                                     weight: 60,
                                 },
                                 {
-                                    type: "textfield",
+                                    type: "customColorSelect",
                                     input: true,
                                     key: "gridColor",
                                     label: "Grid Color",
-                                    defaultValue: "rgba(0, 0, 0, 0.1)",
                                     weight: 70,
+                                    defaultValue: "rgba(0, 0, 0, 0.1)",
                                 },
                                 {
                                     type: "number",
@@ -513,7 +452,7 @@ export class CustomChart extends Components.components.textfield {
                                     weight: 110,
                                 },
                                 {
-                                    type: "textfield",
+                                    type: "customColorSelect",
                                     input: true,
                                     key: "tooltipBackgroundColor",
                                     label: "Tooltip Background Color",
@@ -560,7 +499,7 @@ export class CustomChart extends Components.components.textfield {
                                     weight: 150,
                                 },
                                 {
-                                    type: "textfield",
+                                    type: "customColorSelect",
                                     input: true,
                                     key: "axisColor",
                                     label: "Axis Color",
@@ -568,7 +507,7 @@ export class CustomChart extends Components.components.textfield {
                                     weight: 160,
                                 },
                                 {
-                                    type: "textfield",
+                                    type: "customColorSelect",
                                     input: true,
                                     key: "labelColor",
                                     label: "Label Color",
@@ -599,44 +538,22 @@ export class CustomChart extends Components.components.textfield {
                                             key: "data",
                                             label: "Data",
                                             placeholder: "[10, 20, 30]",
+                                            defaultValue:
+                                                "[10, 20, 30, 25, 15]",
                                             input: true,
                                         },
                                         {
-                                            type: "textfield",
+                                            type: "customColorSelect",
                                             key: "borderColor",
                                             label: "Border Color",
                                             input: true,
                                         },
-                                        // {
-                                        //     type: "textfield",
-                                        //     key: "backgroundColor",
-                                        //     label: "Background Color",
-                                        //     input: true,
-                                        // },
                                         {
-                                            type: "custom", // Указываем тип кастомного компонента
-                                            key: "colorSelect", // Уникальный ключ
-                                            label: "Select Color", // Название
-                                            weight: 100,
-                                            components: [
-                                                {
-                                                    type: "customColorSelect", // Используем ваш кастомный компонент
-                                                    key: "selectedColor", // Уникальный ключ для настройки цвета
-                                                    label: "Choose Color",
-                                                    placeholder:
-                                                        "Select a color",
-                                                    defaultValue: "#000000", // Установите значение по умолчанию
-                                                    onChange: (event: any) => {
-                                                        this.component.selectedColor =
-                                                            event.target.value; // Сохраните выбранный цвет в компонент
-                                                        this.renderComponent(
-                                                            this.element,
-                                                        ); // Перерисуйте компонент
-                                                    },
-                                                },
-                                            ],
+                                            type: "customColorSelect",
+                                            key: "backgroundColor",
+                                            label: "Background Color",
+                                            input: true,
                                         },
-
                                         {
                                             type: "checkbox",
                                             key: "fill",
@@ -644,11 +561,12 @@ export class CustomChart extends Components.components.textfield {
                                             input: true,
                                         },
                                     ],
-                                    weight: 100,
+                                    weight: 10,
                                 },
                             ],
                             weight: 100,
                         },
+
                         {
                             label: "Layout Settings",
                             key: "layoutSettingsTab",

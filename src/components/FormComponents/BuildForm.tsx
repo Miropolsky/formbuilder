@@ -22,11 +22,12 @@ import { CustomAlert } from "../HelpersForm/CustomAlert";
 import { ImageComponent } from "./ImageComponent";
 import { CustomWidget } from "./CustomWidget";
 import { CustomChart } from "./CustomChart";
+import CustomColorSelect from "../../assets/Widjet/CustomColorSelect";
 
 Components.addComponent("customwidget", CustomWidget);
 Components.addComponent("customimage", ImageComponent);
 Components.addComponent("customchart", CustomChart);
-
+Components.addComponent("customColorSelect", CustomColorSelect);
 export default function BuildForm() {
     const [textAlert, setTextAlert] = useState("");
     const [typeAlert, setTypeAlert] = useState<TypeCustomAlert>("error");
