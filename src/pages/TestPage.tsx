@@ -2,12 +2,12 @@ import { useState } from "react";
 import Ventilator from "../assets/Widjet/Ventilator";
 import WaterTank from "../assets/Widjet/WaterTank";
 import WaterFlow from "../assets/Widjet/WaterFlow";
-import { CustomBar } from "../assets/Charts/CustomBar";
 import CustomLine from "../assets/Charts/CustomLine";
 import { CustomBarStacked } from "../assets/Charts/CustomBarStacked";
 import { CustomDoughunt } from "../assets/Charts/CustomDoughunt";
 import { CustomLineArea } from "../assets/Charts/CustomLineArea";
 import { CustomLineAxis } from "../assets/Charts/CustomLineAxis";
+import CustomBar from "../assets/Charts/CustomBar";
 
 export default function TestPage() {
     const [waterLevel, setWaterLevel] = useState(50);

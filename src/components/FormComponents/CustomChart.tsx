@@ -210,6 +210,7 @@ export class CustomChart extends Components.components.textfield {
             }
 
             root.render(<ComponentToRender {...props} />); // Отрисовка с пропсами
+            // this.redraw();
         }
     }
 

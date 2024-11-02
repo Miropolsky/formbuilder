@@ -32,6 +32,7 @@ interface BarChartProps {
     datasets?: IDataSet[]; // Наборы данных
     barBorderWidth?: number; // Ширина границы для столбцов
     barBackgroundColor?: string; // Цвет фона для столбцов
+    labelsX?: [];
 }
 
 // Интерфейс для каждого набора данных (datasets)
@@ -69,8 +70,7 @@ const CustomBar: React.FC<BarChartProps> = ({
     ],
     barBorderWidth = 2,
     barBackgroundColor = "rgba(0, 0, 0, 0.1)",
-}) => {
-    const labels = [
+    labelsX: labels = [
         "January",
         "February",
         "March",
@@ -78,8 +78,8 @@ const CustomBar: React.FC<BarChartProps> = ({
         "May",
         "June",
         "July",
-    ];
-
+    ],
+}) => {
     const data = {
         labels,
         datasets,
