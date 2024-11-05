@@ -3,10 +3,6 @@ import Ventilator from "../assets/Widjet/Ventilator";
 import WaterTank from "../assets/Widjet/WaterTank";
 import WaterFlow from "../assets/Widjet/WaterFlow";
 import CustomLine from "../assets/Charts/CustomLine";
-import { CustomBarStacked } from "../assets/Charts/CustomBarStacked";
-import { CustomDoughunt } from "../assets/Charts/CustomDoughunt";
-import { CustomLineArea } from "../assets/Charts/CustomLineArea";
-import { CustomLineAxis } from "../assets/Charts/CustomLineAxis";
 import CustomBar from "../assets/Charts/CustomBar";
 
 export default function TestPage() {
@@ -40,18 +36,6 @@ export default function TestPage() {
             </div>
             <div className="w-[900px]">
                 <CustomBar />
-            </div>
-            <div className="w-[900px]">
-                <CustomBarStacked />
-            </div>
-            <div className="w-[900px]">
-                <CustomDoughunt />
-            </div>
-            <div className="w-[900px]">
-                <CustomLineArea />
-            </div>
-            <div className="w-[900px]">
-                <CustomLineAxis />
             </div>
         </div>
     );

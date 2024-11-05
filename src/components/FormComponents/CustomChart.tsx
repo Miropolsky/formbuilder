@@ -1,12 +1,12 @@
 import { createRoot } from "react-dom/client"; // Импортируем createRoot
 import { Components } from "@formio/react";
 import { positionToFlex, strToArray } from "../../utils/utils";
-import { CustomBarStacked } from "../../assets/Charts/CustomBarStacked";
-import { CustomDoughunt } from "../../assets/Charts/CustomDoughunt";
 import CustomLine from "../../assets/Charts/CustomLine";
-import { CustomLineAxis } from "../../assets/Charts/CustomLineAxis";
-import { CustomLineArea } from "../../assets/Charts/CustomLineArea";
 import CustomBar from "../../assets/Charts/CustomBar";
+import CustomBarStacked from "../../assets/Charts/CustomBarStacked";
+import CustomDoughnut from "../../assets/Charts/CustomDoughunt";
+import CustomLineAxis from "../../assets/Charts/CustomLineAxis";
+import CustomLineArea from "../../assets/Charts/CustomLineArea";
 
 // Описание схемы для нашего компонента
 interface CustomWidgetSchema {
@@ -44,6 +44,12 @@ export class CustomChart extends Components.components.textfield {
             key: "customChart",
             input: true,
             selectedComponent: "CustomLine", // Компонент по умолчанию
+            props: {
+                isShowTitle: true,
+                isXTitleDisplay: true,
+                isYTitleDisplay: true,
+                isYBeginAtZero: true,
+            },
             ...extend,
         });
     }
@@ -152,6 +158,7 @@ export class CustomChart extends Components.components.textfield {
             };
 
             const customProps = {
+                ...props,
                 selectedComponent,
                 labelsX: strToArray(labelsX),
                 titleOsX,
@@ -181,10 +188,6 @@ export class CustomChart extends Components.components.textfield {
                 labelColor,
             };
 
-            // Логируем, чтобы убедиться, что пропсы передаются корректно
-            console.log("Selected component:", selectedComponent);
-            console.log("Props to pass:", props);
-            console.log("props", customProps);
             // Определяем, какой компонент рендерить
             let ComponentToRender;
             switch (selectedComponent) {
@@ -195,7 +198,7 @@ export class CustomChart extends Components.components.textfield {
                     ComponentToRender = CustomBarStacked;
                     break;
                 case "CustomDoughunt":
-                    ComponentToRender = CustomDoughunt;
+                    ComponentToRender = CustomDoughnut;
                     break;
                 case "CustomLineAxis":
                     ComponentToRender = CustomLineAxis;
@@ -209,11 +212,12 @@ export class CustomChart extends Components.components.textfield {
                     break;
             }
 
-            root.render(<ComponentToRender {...props} />); // Отрисовка с пропсами
+            root.render(<ComponentToRender {...customProps} />); // Отрисовка с пропсами
             // this.redraw();
         }
     }
 
+    /// Настройка полей в настройках
     static editForm() {
         return {
             components: [
@@ -533,6 +537,7 @@ export class CustomChart extends Components.components.textfield {
                                             key: "label",
                                             label: "Label",
                                             input: true,
+                                            defaultValue: "label 1",
                                         },
                                         {
                                             type: "textfield",

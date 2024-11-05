@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,6 +12,7 @@ import {
 import { Line } from "react-chartjs-2";
 import { randomNumber } from "../../utils/utils";
 
+// Регистрация компонентов для Chart.js
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -21,41 +23,30 @@ ChartJS.register(
     Legend,
 );
 
-export const options = {
-    responsive: true,
-    interaction: {
-        mode: "index" as const,
-        intersect: false,
-    },
-    stacked: false,
-    plugins: {
-        title: {
-            display: true,
-            text: "Chart.js Line Chart - Multi Axis",
-        },
-    },
-    scales: {
-        y: {
-            type: "linear" as const,
-            display: true,
-            position: "left" as const,
-        },
-        y1: {
-            type: "linear" as const,
-            display: true,
-            position: "right" as const,
-            grid: {
-                drawOnChartArea: false,
-            },
-        },
-    },
-};
+// Интерфейс для данных графика
+interface LineChartProps {
+    title?: string; // Заголовок графика
+    labels?: string[]; // Метки по оси X
+    datasets?: {
+        label: string; // Название набора данных
+        data: number[]; // Данные для графика
+        borderColor: string; // Цвет линии
+        backgroundColor: string; // Цвет фона
+        yAxisID: string; // Идентификатор оси Y
+    }[]; // Массив наборов данных
+    stacked?: boolean; // Стековые данные
+    showTitle?: boolean; // Показать заголовок или нет
+    height: string;
+    width: string;
+}
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-    labels,
-    datasets: [
+// Компонент для графика в виде линейной диаграммы
+const CustomLineAxis: React.FC<LineChartProps> = ({
+    height = "300px",
+    width = "600px",
+    title = "Chart.js Line Chart - Multi Axis",
+    labels = ["January", "February", "March", "April", "May", "June", "July"],
+    datasets = [
         {
             label: "Dataset 1",
             data: labels.map(() => randomNumber(-1000, 1000)),
@@ -71,8 +62,45 @@ export const data = {
             yAxisID: "y1",
         },
     ],
+    stacked = false,
+    showTitle = true,
+}) => {
+    const options = {
+        responsive: true,
+        interaction: {
+            mode: "index" as const,
+            intersect: false,
+        },
+        stacked,
+        plugins: {
+            title: {
+                display: showTitle,
+                text: title,
+            },
+        },
+        scales: {
+            y: {
+                type: "linear" as const,
+                display: true,
+                position: "left" as const,
+            },
+            y1: {
+                type: "linear" as const,
+                display: true,
+                position: "right" as const,
+                grid: {
+                    drawOnChartArea: false,
+                },
+            },
+        },
+    };
+
+    const data = {
+        labels,
+        datasets,
+    };
+
+    return <Line width={width} height={height} options={options} data={data} />;
 };
 
-export function CustomLineAxis() {
-    return <Line options={options} data={data} />;
-}
+export default CustomLineAxis;
